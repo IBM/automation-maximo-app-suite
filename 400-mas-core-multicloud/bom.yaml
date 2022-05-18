@@ -1,0 +1,146 @@
+apiVersion: cloud.ibm.com/v1alpha1
+kind: BillOfMaterial
+metadata:
+  name: 400-mas-core-multicloud
+  labels:
+    type: software
+    code: '400'
+  annotations:
+    displayName: Maximo Application Suite Core
+    description: GitOps deployment of Maximo Application Suite Core for OpenShift
+spec:
+  modules:
+    - name: gitops-cp-bas
+      alias: bas
+      version: v1.1.1
+      dependencies:
+        - name: namespace
+          ref: bas-namespace
+    - name: gitops-cp-catalogs
+      alias: gitops-cp-catalogs
+      version: v1.2.1
+      variables:
+        - name: entitlement_key
+          scope: global
+    - name: gitops-cp-maximo
+      alias: gitops-cp-maximo
+      version: v1.2.0
+      variables:
+        - name: instanceid
+          ref: mas8
+        - name: cluster_ingress
+          scope: global
+        - name: entitlement_key
+          scope: global
+      dependencies:
+        - name: namespace
+          ref: maximo-namespace
+    - name: gitops-cp-sls
+      alias: sls
+      version: v2.3.3
+      dependencies:
+        - name: namespace
+          ref: sls-namespace
+      variables:
+        - name: cluster_ingress
+          scope: global
+        - name: entitlement_key
+          scope: global
+    - name: gitops-mongo-ce-operator
+      alias: gitops-mongo-ce-operator
+      version: v1.0.6
+      dependencies:
+        - name: namespace
+          ref: mongo-namespace
+    - name: gitops-mongo-ce
+      alias: gitops-mongo-ce
+      version: v1.2.2
+      dependencies:
+        - name: namespace
+          ref: mongo-namespace
+    - name: gitops-namespace
+      alias: sls-namespace
+      version: v1.11.2
+      variables:
+        - name: name
+          value: sls
+    - name: gitops-namespace
+      alias: mongo-namespace
+      version: v1.11.2
+      variables:
+        - name: name
+          value: mongo
+    - name: gitops-namespace
+      alias: bas-namespace
+      version: v1.11.2
+      variables:
+        - name: name
+          value: bas
+    - name: gitops-namespace
+      alias: maximo-namespace
+      version: v1.11.2
+      variables:
+        - name: name
+          value: maximo
+    - name: gitops-repo
+      alias: gitops_repo
+      version: v1.18.1
+    - name: util-storage-class-manager
+      alias: util-storage-class-manager
+      version: v1.0.2
+      variables:
+        - name: rwx_storage_class
+          scope: global
+        - name: rwo_storage_class
+          scope: global
+        - name: file_storage_class
+          scope: global
+        - name: block_storage_class
+          scope: global
+    - name: util-clis
+      version: v1.16.0
+  variables:
+    - name: entitlement_key
+      type: string
+      description: >-
+        The entitlement key used to access the CP4I images in the container
+        registry. Visit https://myibm.ibm.com/products-services/containerlibrary
+        to get the key
+      sensitive: true
+    - name: cluster_ingress
+      type: string
+      description: Ingress for cluster
+    - name: gitops_repo_host
+      type: string
+      description: The host for the git repository.
+      defaultValue: ''
+    - name: gitops_repo_org
+      type: string
+      description: The org/group where the git repository exists/will be provisioned.
+      defaultValue: ''
+    - name: gitops_repo_username
+      type: string
+      description: The username of the user with access to the repository
+      defaultValue: ''
+    - name: gitops_repo_token
+      type: string
+      description: The personal access token used to access the repository
+      defaultValue: ''
+      sensitive: true
+    - name: gitops_repo_repo
+      type: string
+      description: >-
+        The short name of the repository (i.e. the part after the org/group
+        name)
+    - name: rwx_storage_class
+      type: string
+      description: The storage class to use for Read-Write-Many volumes
+    - name: rwo_storage_class
+      type: string
+      description: The storage class to use for Read-Write-One volumes
+    - name: file_storage_class
+      type: string
+      description: The storage class to use for File storage volumes
+    - name: block_storage_class
+      type: string
+      description: The storage class to use for Block storage volumes

@@ -1,0 +1,69 @@
+name: Verify
+
+# Controls when the action will run.
+on:
+  workflow_call:
+    outputs:
+      status:
+        description: The status of the job
+        value: ${{ jobs.verify.outputs.status }}
+    secrets:
+      IBMCLOUD_API_KEY:
+        required: true
+      GITOPS_USERNAME:
+        required: true
+      GITOPS_TOKEN:
+        required: true
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    container:
+      image: quay.io/cloudnativetoolkit/terraform:v1.1
+      options: --privileged
+
+    strategy:
+      matrix:
+        provider:
+          - ibm
+        storage:
+          - odf
+      fail-fast: false
+
+    env:
+      HOME: /home/devops
+      IBMCLOUD_API_KEY: ${{ secrets.IBMCLOUD_API_KEY }}
+      TF_VAR_ibmcloud_api_key: ${{ secrets.IBMCLOUD_API_KEY }}
+      TF_VAR_gitops_repo_username: ${{ secrets.GITOPS_USERNAME }}
+      TF_VAR_gitops_repo_token: ${{ secrets.GITOPS_TOKEN }}
+
+    outputs:
+      status: ${{ job.status }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Terraform Apply - ${{ matrix.flavor }},${{ matrix.storage }}
+        run: |
+          RANDOM_PREFIX=$(cat /dev/urandom | tr -dc '[:alpha:]' | tr '[:upper:]' '[:lower:]' | fold -w ${1:-5} | head -n 1)
+          PROVIDER_CHAR=$(echo "${{ matrix.provider }}" | fold -w ${1:-2} | head -n 1)
+          STORAGE_CHAR=$(echo "${{ matrix.storage }}" | fold -w ${1:-1} | head -n 1)
+          ./setup-workspace.sh -p ${{ matrix.provider }} -s ${{ matrix.storage }} -n "${FLAVOR_CHAR}${STORAGE_CHAR}-${RANDOM_PREFIX}" -r eu-de
+          cd ../workspaces/current
+          
+          echo ""
+          echo "*** Start terraform.tfvars ***"
+          cat terraform.tfvars
+          echo "*** End terraform.tfvars ***"
+          echo ""
+          
+          ./apply-all.sh
+
+      - name: Terraform Destroy - ${{ matrix.flavor }},${{ matrix.storage }}
+        if: ${{ always() }}
+        run: |
+          cd ../workspaces/current
+          ./destroy-all.sh
