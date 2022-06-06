@@ -99,7 +99,7 @@ The Maximo Core automation is broken into different layers of automation or bund
 | BOM ID | Name                                                                                                                                                                                                                                                  | Description                                                                                                                                                                                                                                     | Run Time |
 |--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
 | 200    | [200 - OpenShift Gitops](./200-openshift-gitops)                                                                                                                                                                                                      | Set up OpenShift GitOps in ROSA, ARO or ROKS. This is required to install the software using gitops. Only use this if you are bringing your own OpenShift cluster which has not been provisioned from the reference architectures listed above. | 10 Mins  |
-| 210    | Storage <br/> [210-aws-portworx-storage](./210-aws-portworx-storage) <br/> [210-azure-portworx-storage](./210-azure-portworx-storage) <br/> [210-ibm-odf-storage](./210-ibm-odf-storage) <br/> [210-ibm-portworx-storage](./210-ibm-portworx-storage) | If you are installing into your own ROKS clusters on IBM Cloud you will need to use this automation bundle to configure storage in the cluster before installing Maximo Core. Only one of these layers needs to be applied.                     | 30 Mins  |
+| 210    | Storage <br/> [210-aws-portworx-storage](./210-aws-portworx-storage) <br/> [210-azure-portworx-storage](./210-azure-portworx-storage) <br/> [210-ibm-odf-storage](./210-ibm-odf-storage) <br/> [210-ibm-portworx-storage](./210-ibm-portworx-storage) | If you are installing into your own ROKS clusters on IBM Cloud you will need to use this automation bundle to configure storage in the cluster before installing Maximo Core. Only one of these layers needs to be applied.  NOTE this may be optional if you have already provisioned storage on your cluster.                     | 30 Mins  |
 | 400    | [400 - Maximo Core - Multi Cloud](./400-mas-core-multicloud)                                                                                                                                                                                          | Provision Maximo Core into Multi Cloud environment AWS, Azure and IBM Cloud supported                                                                                                                                                           | 30 Mins  |
 
 ## Installation Steps
@@ -320,42 +320,56 @@ The following are variables that you will be prompted for and some suggested val
 | rwx_storage_class                 | The storage class to use for Read-Write-Many volumes. Use a portworx or odf storage class (e.g. portworx: portworx-rwx-gp3-sc or odf: ocs-storagecluster-cephfs) | portworx-rwx-gp3-sc                                   |
 | rwo_storage_class                 | The storage class to use for Read-Write-One volumes.  on aws: `gp2`, on azure: `managed-premium`, on ibm: `ibmc-vpc-block-10iops-tier`                           | ibmc-vpc-block-10iops-tier                            |
 | file_storage_class                | The storage class to use for file storage volumes.  on aws: `gp2`, on azure: `managed-premium`, on ibm: `ibmc-vpc-block-10iops-tier`                             | ibmc-vpc-block-10iops-tier                            |
-| block_storage_class               | The storage class to use for block storage volumes.  on aws: `gp2`, on azure: `managed-premium`, on ibm: `ibmc-vpc-block-10iops-tier`                            | ibmc-vpc-block-10iops-tier                            |
-| gitops_repo_host                  | The host for the git repository.                                                                                                                                 | github.com                                            |
-| gitops_repo_type                  | The type of the hosted git repository (github or gitlab).                                                                                                        | github                                                |
-| gitops_repo_org                   | The org/group where the git repository will be created. If the value is left blank then it will default to the username                                          | github userid or org                                  |
-| gitops_repo_repo                  | The short name of the repository to create                                                                                                                       | gitops-mas-ibmcloud                                   |
-| gitops_repo_username              | The username of the user with access to the repository                                                                                                           | github userid                                         |
-| gitops_repo_token                 | The git personal access token                                                                                                                                    | BFe4k0MFK9s5RGIt...                                   |
-| entitlement_key                   | CloudPak Entitlement Key                                                                                                                                         | eyJhbGciOiJIUzI1NiJ9.eyJpc3...                        |
-| cluster_ingress                   | Ingress of the Cluster                                                                                                                                           | masdemo.us-east-container.appdomain.cloud             |
-| gitops-cp-maximo_instanceid       | Instance name for MAS - for example: masdemo or mas8                                                                                                             | mas8                                                  |
-| sls-namespace_name                | Namespace for IBM SLS                                                                                                                                            | ibm-sls                                               |
-| mongo-namespace_name              | Namespace for Mongo                                                                                                                                              | mongo                                                 |
-| bas-namespace_name                | Namespace for BAS                                                                                                                                                | masbas                                                |
-| server_url                        | Url fo the OpenShift cluster                                                                                                                                     | https://c100-e.us-east.containers.cloud.ibm.com:32346 |
-| cluster_login_token               | OpenShift cluster login token                                                                                                                                    | sha256~nlXiXCYO_kEydz36B88y0reQ...                    |
-| gitops-cluster-config_banner_text | Banner text for the cluster console                                                                                                                              | Maximo Application Suite                              |
-| portworx_spec_file                | The name of the file containing the portworx configuration spec yaml                                                                                             | portworx_essentials.yaml                              |
+| block_storage_class               | The storage class to use for block storage volumes.  on aws: `gp2`, on azure: `managed-premium`, on ibm: `ibmc-vpc-block-10iops-tier`                            | ibmc-vpc-block-10iops-tier                            |                                |
 
-1. Update the desired values in `terraform.tfvars`
+
+
+1. Update the desired values in `terraform.tfvars` In many cases the default values are most likely good.
 2. Save the `terraform.tfvars` file
 
 #### Apply the automation
 
-1. We are now ready to start installing Maximo Core. Run the `launch.sh` command if you are not inside the running container. Make sure you are in the root of the automation-maximo-app-suite repository.
 
-    ```shell
-    ./launch.sh
+1. Navigate into the `/workspaces/current` folder
+
+    > ❗️ Do not skip this step.  You must execute from the `/worksapces/current` folder.
+
+2. (optional if installing gitops) Navigate into the `200-openshift-gitops` folder and run the following commands
+
+    ```
+    cd 200-openshift-gitops
+    terraform init
+    terraform apply --auto-approve
     ```
 
-2. Within the container terminal, change directory to the `/workspaces/current` folder. This folder was populated by the `setup-workspaces.sh` script in the previous step. (The `launch.sh` command configures a named volume to preserve the contents of the `/workspaces` directory between container images so you don't need to re-run `setup-workspaces.sh` again unless you want to configure a different environment.)
-3. Run `./apply-all.sh` to kick off the automation. The script will apply each layer in order.
-4. You can check the progress by looking at two places, first look in your github repository. You will see the git repository has been created based on the name you have provided. The Maximo Core install will populate this with information to let OpenShift GitOps install the software. The second place is to look at the OpenShift console, Click Workloads->Pods and you will see the GitOps operator being installed.
 
+When that has completed, you can move on. 
+
+3. (optional if installing storage)
+
+Change directories to the `200-*` folder and run the following commands to deploy storage into your cluster:
+
+    ```
+    cd 210-ibm-portworx-storage
+    terraform init
+    terraform apply --auto-approve
+    ```
+    
+    > This folder will vary based on the platform and storage options that you selected in earlier steps.
+
+When that has completed, you can move on. Be sure to give it adequate time to complete.  The automation will complete before the actual storage is totally provisioned.  This could take 25mins depending on your cluster.
+
+4.  Change directories to the `400-*` folder and run the following commands to deploy storage into your cluster:
+
+    ```
+    cd 400-mas-core-multicloud
+    terraform init
+    terraform apply --auto-approve
+    ```
+    
 Once the installation has finished you will see a message from terraform that shows the state of the resources that were provisioned.
 
-The Maximo Application Suite will continue for approximately another 20 minutes while it sets up MAS and all the components for MAS-Core.  From this point you can skip to the MAS suite setup steps in the [README](./README.md#setup) below.
+The Maximo Application Suite will continue for approximately another 30 minutes while it sets up MAS and all the components for MAS-Core.
 
 ### Validating the Maximo Core installation
 
@@ -370,6 +384,8 @@ The initial setup for MAS is done through the web console and can be found in th
 
 `https://admin.${YourDomainURL}/initialsetup`
 
+The admin workspace url has been added to the OpenShift application link menu and can be found there.  Note you will need to append the initialsetup to the end of the url there.  After setup, you will be able to access the MAS Admin workspace directly from this menu link without needing to append anything to the url.  That is only needed for the initial setup.
+
 NOTE: Depending on the browser you may have to import the self-signed certificate into your keystore (if on a mac)
 
 Login as super user with credential found in the secret named: `{masInstanceID}-credentials-superuser` in the OpenShift project named: `mas-{masInstanceID}-core`
@@ -379,12 +395,3 @@ Login as super user with credential found in the secret named: `{masInstanceID}-
 
 This concludes the instructions for installing *Maximo Core* on AWS, Azure, and IBM Cloud
 
-## Troubleshooting
-
-Please refer to the [Troubleshooting Guide](./TROUBLESHOOTING.md) for uninstallation instructions and instructions to correct common issues.
-
-## How to Generate this repository from teh source Bill of Materials.
-
-This set of automation packages was generated using the open-source [`isacable`](https://github.com/cloud-native-toolkit/iascable) tool. This tool enables a [Bill of Material yaml](https://github.com/cloud-native-toolkit/automation-solutions/tree/main/boms/software/maximo) file to describe your software requirements. If you want up stream releases or versions you can use `iascable` to generate a new terraform module.
-
-> The `iascable` tool is targeted for use by advanced SRE developers. It requires deep knowledge of how the modules plug together into a customized architecture. This repository is a fully tested output from that tool. This makes it ready to consume for projects.
