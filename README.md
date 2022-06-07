@@ -129,7 +129,7 @@ Ensure the following before continuing
 - You are able to login to the OpenShift cluster and obtain an OpenShift login token
 - Cloud Pak entitlement key, this can be obtained from visiting the [IBM Container Library](https://myibm.ibm.com/products-services/containerlibrary)
 
-### Installing Maximo Core
+### Installing Maximo App Suite Core
 
 The installation process will use a standard GitOps repository that has been built using the Modules to support Maximo Core installation. The automation is consistent across three cloud environments AWS, Azure, and IBM Cloud.
 
@@ -350,7 +350,7 @@ When that has completed, you can move on.
 Change directories to the `200-*` folder and run the following commands to deploy storage into your cluster:
 
     ```
-    cd 210-ibm-portworx-storage
+    cd ..\210-ibm-portworx-storage
     terraform init
     terraform apply --auto-approve
     ```
@@ -362,7 +362,7 @@ When that has completed, you can move on. Be sure to give it adequate time to co
 4.  Change directories to the `400-*` folder and run the following commands to deploy storage into your cluster:
 
     ```
-    cd 400-mas-core-multicloud
+    cd ..\400-mas-core-multicloud
     terraform init
     terraform apply --auto-approve
     ```
@@ -390,8 +390,52 @@ NOTE: Depending on the browser you may have to import the self-signed certificat
 
 Login as super user with credential found in the secret named: `{masInstanceID}-credentials-superuser` in the OpenShift project named: `mas-{masInstanceID}-core`
 
-
 ## Summary
 
 This concludes the instructions for installing *Maximo Core* on AWS, Azure, and IBM Cloud
+
+### Installing Maximo App Suite - Manage
+
+The following instructions can be used to install the Maximo Application Suite - Manage application.  Manage is a necessary prerequisite for most of the MAS applications.  If your environment does not require Manage, then you can skip this step.
+
+1. Before installing, ensure that your `terraform.tfvars` file has the appropriate configuration you wish to install for MAS Manage.  These values should be set based on your settings from running `setup-workspace.sh` above, but can be modified here.
+
+## Supported Manage Industry Add-on solutions (optional)
+This module currently supports installing the following add-ons with MAS Manage:
+- Health
+- Civil Infrastructure
+
+Set the `addons` variable in `terrafrom.tfvars` such that it looks like the following to deploy health with Manage: 
+
+`addons = ["health"]`
+
+To deploy Civil Infrastructure use:
+
+`addons = ["civil"]`
+
+The other industry solutions follow the same format and are comma separated if more than one is needed.  NOTE be sure to check MAS requirements as not all industry solutions can be deployed together.
+
+## Demo Data
+Demo data can be deployed automatically with Manage.  This will significantly increase the installation time for Manage and require space in your database, as a result by default demo data is not deployed with Manage.  Demo data can be useful as it also installs default users, and to actuall login to Manage you will need the `maxadmin` user defined and configured which the demo data install will automatically do.
+
+If this is instance is purely for demonstration purposes or poc, you may want to deploy demo data then. In this case you can set the following:
+
+`demodata = true`
+
+2.  Change directories to the `405-*` folder and run the following commands to deploy storage into your cluster:
+
+    ```
+    cd ..\405-mas-app-manage
+    cd 405-mas-app-manage
+    terraform init
+    terraform apply --auto-approve
+    ```
+
+Once the automation has finished you will see a message from terraform that shows the state of the resources that were provisioned.
+
+The Manage installation will continue for approximately another 2.5 - 5hrs depending if demo data was installed or not. 
+
+### Validating the Manage installation
+
+During this installation process, you can login to the Maximo admin workspace using the link on the OpenShift Application Menu and navigate to the application Catalog and select the Manage icon.  This will show several different installation steps, and the current state. Note some will show failure at first.  This is expected as those steps may not have completed yet.  When all installation steps have a green checkmark as complete, the Manage installation is complete and ready to use.
 
