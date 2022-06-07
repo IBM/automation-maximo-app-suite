@@ -421,8 +421,8 @@ If this is instance is purely for demonstration purposes or poc, you may want to
 4.  Change directories to the `405-*` folder and run the following commands to deploy storage into your cluster:
 
     ```
-    cd ..\405-mas-app-manage
-    cd 405-mas-app-manage
+    cd ..\405-mas-manage
+    cd 405-mas-manage
     terraform init
     terraform apply --auto-approve
     ```
