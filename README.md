@@ -321,6 +321,7 @@ The following are variables that you will be prompted for and some suggested val
 | rwo_storage_class                 | The storage class to use for Read-Write-One volumes.  on aws: `gp2`, on azure: `managed-premium`, on ibm: `ibmc-vpc-block-10iops-tier`                           | ibmc-vpc-block-10iops-tier                            |
 | file_storage_class                | The storage class to use for file storage volumes.  on aws: `gp2`, on azure: `managed-premium`, on ibm: `ibmc-vpc-block-10iops-tier`                             | ibmc-vpc-block-10iops-tier                            |
 | block_storage_class               | The storage class to use for block storage volumes.  on aws: `gp2`, on azure: `managed-premium`, on ibm: `ibmc-vpc-block-10iops-tier`                            | ibmc-vpc-block-10iops-tier                            |                                |
+| portworx_spec_file                | The name of the file containing the portworx configuration spec yaml                                                                                             | portworx_essentials.yaml                              |
 
 
 
