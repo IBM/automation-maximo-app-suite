@@ -98,17 +98,6 @@ module "gitops-mongo-ce-operator" {
   namespace = module.mongo-namespace.name
   server_name = module.gitops_repo.server_name
 }
-module "maximo-namespace" {
-  source = "github.com/cloud-native-toolkit/terraform-gitops-namespace?ref=v1.11.2"
-
-  argocd_namespace = var.maximo-namespace_argocd_namespace
-  ci = var.maximo-namespace_ci
-  create_operator_group = var.maximo-namespace_create_operator_group
-  git_credentials = module.gitops_repo.git_credentials
-  gitops_config = module.gitops_repo.gitops_config
-  name = var.maximo-namespace_name
-  server_name = module.gitops_repo.server_name
-}
 module "mongo-namespace" {
   source = "github.com/cloud-native-toolkit/terraform-gitops-namespace?ref=v1.11.2"
 
@@ -152,7 +141,7 @@ module "sls-namespace" {
 }
 module "util-clis" {
   source = "cloud-native-toolkit/clis/util"
-  version = "1.16.0"
+  version = "1.16.1"
 
   bin_dir = var.util-clis_bin_dir
   clis = var.util-clis_clis == null ? null : jsondecode(var.util-clis_clis)

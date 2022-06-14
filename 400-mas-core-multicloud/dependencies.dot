@@ -29,7 +29,5 @@ digraph {
 "gitops-mongo-ce-operator (gitops-mongo-ce-operator)"
 "mongo-namespace (gitops-namespace)" -> "gitops_repo (gitops-repo)"
 "mongo-namespace (gitops-namespace)"
-"maximo-namespace (gitops-namespace)" -> "gitops_repo (gitops-repo)"
-"maximo-namespace (gitops-namespace)"
 "util-clis (util-clis)"
   }
