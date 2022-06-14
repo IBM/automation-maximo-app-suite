@@ -99,7 +99,7 @@ variable "gitops-mongo-ce_service_name" {
 variable "sls-namespace_name" {
   type = string
   description = "The value that should be used for the namespace"
-  default = "sls"
+  default = "ibm-sls"
 }
 variable "sls-namespace_ci" {
   type = bool
@@ -139,7 +139,7 @@ variable "mongo-namespace_argocd_namespace" {
 variable "bas-namespace_name" {
   type = string
   description = "The value that should be used for the namespace"
-  default = "bas"
+  default = "masbas"
 }
 variable "bas-namespace_ci" {
   type = bool
@@ -152,26 +152,6 @@ variable "bas-namespace_create_operator_group" {
   default = true
 }
 variable "bas-namespace_argocd_namespace" {
-  type = string
-  description = "The namespace where argocd has been deployed"
-  default = "openshift-gitops"
-}
-variable "maximo-namespace_name" {
-  type = string
-  description = "The value that should be used for the namespace"
-  default = "maximo"
-}
-variable "maximo-namespace_ci" {
-  type = bool
-  description = "Flag indicating that this namespace will be used for development (e.g. configmaps and secrets)"
-  default = false
-}
-variable "maximo-namespace_create_operator_group" {
-  type = bool
-  description = "Flag indicating that an operator group should be created in the namespace"
-  default = true
-}
-variable "maximo-namespace_argocd_namespace" {
   type = string
   description = "The namespace where argocd has been deployed"
   default = "openshift-gitops"

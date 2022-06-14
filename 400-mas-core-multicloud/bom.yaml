@@ -32,9 +32,6 @@ spec:
           scope: global
         - name: entitlement_key
           scope: global
-      dependencies:
-        - name: namespace
-          ref: maximo-namespace
     - name: gitops-cp-sls
       alias: sls
       version: v2.3.3
@@ -63,7 +60,7 @@ spec:
       version: v1.11.2
       variables:
         - name: name
-          value: sls
+          value: ibm-sls
     - name: gitops-namespace
       alias: mongo-namespace
       version: v1.11.2
@@ -75,13 +72,7 @@ spec:
       version: v1.11.2
       variables:
         - name: name
-          value: bas
-    - name: gitops-namespace
-      alias: maximo-namespace
-      version: v1.11.2
-      variables:
-        - name: name
-          value: maximo
+          value: masbas
     - name: gitops-repo
       alias: gitops_repo
       version: v1.18.1
@@ -98,7 +89,7 @@ spec:
         - name: block_storage_class
           scope: global
     - name: util-clis
-      version: v1.16.0
+      version: v1.16.1
   variables:
     - name: entitlement_key
       type: string
