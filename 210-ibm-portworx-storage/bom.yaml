@@ -27,7 +27,7 @@ spec:
       version: v3.2.15
     - name: gitops-repo
       alias: gitops_repo
-      version: v1.18.1
+      version: v1.19.1
     - name: gitops-ibmcloud-operator
       version: v0.2.1
   variables:
