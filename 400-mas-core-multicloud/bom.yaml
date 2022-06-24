@@ -8,6 +8,7 @@ metadata:
   annotations:
     displayName: Maximo Application Suite Core
     description: GitOps deployment of Maximo Application Suite Core for OpenShift
+    deployment-type/gitops: 'true'
 spec:
   modules:
     - name: gitops-cp-bas
@@ -75,7 +76,7 @@ spec:
           value: masbas
     - name: gitops-repo
       alias: gitops_repo
-      version: v1.18.1
+      version: v1.19.1
     - name: util-storage-class-manager
       alias: util-storage-class-manager
       version: v1.0.2
@@ -89,7 +90,7 @@ spec:
         - name: block_storage_class
           scope: global
     - name: util-clis
-      version: v1.16.1
+      version: v1.16.2
   variables:
     - name: entitlement_key
       type: string
