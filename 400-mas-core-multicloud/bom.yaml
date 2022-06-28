@@ -76,7 +76,7 @@ spec:
           value: masbas
     - name: gitops-repo
       alias: gitops_repo
-      version: v1.19.1
+      version: v1.19.4
     - name: util-storage-class-manager
       alias: util-storage-class-manager
       version: v1.0.2
@@ -109,6 +109,12 @@ spec:
     - name: gitops_repo_org
       type: string
       description: The org/group where the git repository exists/will be provisioned.
+      defaultValue: ''
+    - name: gitops_repo_project
+      type: string
+      description: >-
+        The project that will be used for the git repo. (Primarily used for
+        Azure DevOps repos)
       defaultValue: ''
     - name: gitops_repo_username
       type: string
