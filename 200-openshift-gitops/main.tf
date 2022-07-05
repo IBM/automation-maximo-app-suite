@@ -29,8 +29,19 @@ module "cluster" {
   skip = var.cluster_skip
   tls_secret_name = var.cluster_tls_secret_name
 }
+module "config" {
+  source = "github.com/cloud-native-toolkit/terraform-gitops-cluster-config?ref=v1.0.0"
+
+  banner_background_color = var.config_banner_background_color
+  banner_text = var.config_banner_text
+  banner_text_color = var.config_banner_text_color
+  git_credentials = module.gitops_repo.git_credentials
+  gitops_config = module.gitops_repo.gitops_config
+  namespace = module.toolkit_namespace.name
+  server_name = module.gitops_repo.server_name
+}
 module "gitea" {
-  source = "github.com/cloud-native-toolkit/terraform-tools-gitea?ref=v0.4.1"
+  source = "github.com/cloud-native-toolkit/terraform-tools-gitea?ref=v0.3.7"
 
   cluster_config_file = module.cluster.config_file_path
   cluster_type = module.cluster.platform.type_code
@@ -69,17 +80,6 @@ module "gitops_repo" {
   token = var.gitops_repo_token
   type = var.gitops_repo_type
   username = var.gitops_repo_username
-}
-module "gitops-cluster-config" {
-  source = "github.com/cloud-native-toolkit/terraform-gitops-cluster-config?ref=v1.0.0"
-
-  banner_background_color = var.gitops-cluster-config_banner_background_color
-  banner_text = var.gitops-cluster-config_banner_text
-  banner_text_color = var.gitops-cluster-config_banner_text_color
-  git_credentials = module.gitops_repo.git_credentials
-  gitops_config = module.gitops_repo.gitops_config
-  namespace = module.toolkit_namespace.name
-  server_name = module.gitops_repo.server_name
 }
 module "gitops-console-link-job" {
   source = "github.com/cloud-native-toolkit/terraform-gitops-console-link-job?ref=v1.4.6"

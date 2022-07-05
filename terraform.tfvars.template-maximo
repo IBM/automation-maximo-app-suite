@@ -19,19 +19,6 @@ file_storage_class="RWO_STORAGE"
 ## <your block storage on aws: gp2, on azure: managed-premium, on ibm: ibmc-vpc-block-10iops-tier>
 block_storage_class="RWO_STORAGE"
 
-## gitops-repo_host: The host for the git repository.
-gitops_repo_host="github.com"
-
-## gitops-repo_type: The type of the hosted git repository (github or gitlab).
-gitops_repo_type="github"
-
-## gitops-repo_org: The org/group where the git repository exists/will be provisioned.
-## your gitorg - if left blank the value will default to your username
-gitops_repo_org=""
-
-## gitops-repo_repo: The short name of the repository (i.e. the part after the org/group name)
-gitops_repo_repo="PREFIXmas-gitops"
-
 ## gitops-cp-maximo_instanceid: instance name for MAS - for example: masdemo or mas8
 gitops-cp-maximo_instanceid="masdemo"
 
@@ -52,7 +39,7 @@ resource_group_name="PREFIXstorage"
 
 ## cluster_ingress: The subdomain for ingresses in the cluster
 ## The value can be retrieved from the cluster using 'oc get ingresses.config/cluster -o jsonpath={.spec.domain}''
-cluster_ingress="CLUSTER_INGRESS"
+#cluster_ingress="CLUSTER_INGRESS"
 
 ## odf_namespace_name: The namespace where the job that provisions odf will run
 odf_namespace_name="odf"

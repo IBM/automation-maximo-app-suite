@@ -14,12 +14,12 @@ spec:
   modules:
     - name: gitea
       alias: gitea
-      version: v0.4.1
+      version: v0.3.7
       dependencies:
         - id: namespace
           ref: gitea_namespace
     - name: gitops-cluster-config
-      alias: gitops-cluster-config
+      alias: config
       version: v1.0.0
     - name: gitops-console-link-job
       alias: gitops-console-link-job
@@ -46,8 +46,6 @@ spec:
       variables:
         - name: create_webhook
           value: true
-        - name: prefix
-          value: maximo
     - name: ocp-login
       alias: cluster
       version: v1.4.2
@@ -60,7 +58,7 @@ spec:
     - name: sealed-secret-cert
       version: v1.0.1
   variables:
-    - name: gitops-cluster-config_banner_text
+    - name: config_banner_text
       type: string
       description: The text that will appear in the top banner in the cluster
     - name: gitops_repo_host

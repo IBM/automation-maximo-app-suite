@@ -1,61 +1,65 @@
-variable "gitea_instance_name" {
-  type = string
-  description = "The name for the instance"
-  default = "gitea"
-}
-variable "gitea_username" {
-  type = string
-  description = "The username for the instance"
-  default = "gitea-admin"
-}
-variable "gitea_password" {
-  type = string
-  description = "The password for the instance"
-  default = ""
-}
 variable "ibmcloud_api_key" {
   type = string
-  description = "The api key for IBM Cloud access"
+  description = "The api key for the IBM Cloud account"
 }
-variable "gitea_namespace_name" {
+variable "region" {
+  type = string
+  description = "The region where the Portworx service should be deployed. This region used doesn't really impact anything because the service runs in the cluster"
+  default = "us-east"
+}
+variable "gitops-ibm-portworx_encryption_key" {
+  type = string
+  description = "The crn for the encryption key that should be used to encrypt the volume. If not provided the volume will be encrypted with an IBM-managed key"
+  default = ""
+}
+variable "gitops-ibm-portworx_capacity" {
+  type = string
+  description = "The capacity of the portworx volume"
+  default = "200"
+}
+variable "gitops-ibm-portworx_iops" {
+  type = string
+  description = "The transfer speed of the portworx volume. This value is only used if the profile is set to 'custom'"
+  default = ""
+}
+variable "gitops-ibm-portworx_profile" {
+  type = string
+  description = "The profile of the portworx volumes"
+  default = "10iops-tier"
+}
+variable "portworx_namespace_name" {
   type = string
   description = "The value that should be used for the namespace"
-  default = "gitea"
+  default = "portworx"
 }
-variable "gitea_namespace_ci" {
+variable "portworx_namespace_ci" {
   type = bool
   description = "Flag indicating that this namespace will be used for development (e.g. configmaps and secrets)"
   default = false
 }
-variable "gitea_namespace_create_operator_group" {
+variable "portworx_namespace_create_operator_group" {
   type = bool
   description = "Flag indicating that an operator group should be created in the namespace"
   default = true
 }
-variable "gitea_namespace_argocd_namespace" {
+variable "portworx_namespace_argocd_namespace" {
   type = string
   description = "The namespace where argocd has been deployed"
   default = "openshift-gitops"
 }
-variable "odf_namespace_name" {
+variable "resource_group_name" {
   type = string
-  description = "The value that should be used for the namespace"
-  default = "odf"
+  description = "The name of the resource group"
 }
-variable "odf_namespace_ci" {
+variable "resource_group_sync" {
+  type = string
+  description = "Value used to order the provisioning of the resource group"
+  default = ""
+}
+variable "purge_volumes" {
   type = bool
-  description = "Flag indicating that this namespace will be used for development (e.g. configmaps and secrets)"
+  description = "Flag indicating that any volumes in the resource group should be automatically destroyed before destroying the resource group. If volumes exist and the flag is false then the destroy will fail."
   default = false
-}
-variable "odf_namespace_create_operator_group" {
-  type = bool
-  description = "Flag indicating that an operator group should be created in the namespace"
-  default = true
-}
-variable "odf_namespace_argocd_namespace" {
-  type = string
-  description = "The namespace where argocd has been deployed"
-  default = "openshift-gitops"
 }
 variable "gitops_repo_host" {
   type = string
@@ -83,6 +87,26 @@ variable "gitops_repo_username" {
   default = ""
 }
 variable "gitops_repo_token" {
+  type = string
+  description = "The personal access token used to access the repository"
+  default = ""
+}
+variable "gitops_repo_gitea_host" {
+  type = string
+  description = "The host for the default gitea repository."
+  default = ""
+}
+variable "gitops_repo_gitea_org" {
+  type = string
+  description = "The org/group for the default gitea repository. If not provided, the value will default to the username org"
+  default = ""
+}
+variable "gitops_repo_gitea_username" {
+  type = string
+  description = "The username of the default gitea repository"
+  default = ""
+}
+variable "gitops_repo_gitea_token" {
   type = string
   description = "The personal access token used to access the repository"
   default = ""
@@ -125,52 +149,4 @@ variable "debug" {
   type = bool
   description = "Flag indicating that debug loggging should be enabled"
   default = false
-}
-variable "server_url" {
-  type = string
-  description = "The url for the OpenShift api"
-}
-variable "cluster_login_user" {
-  type = string
-  description = "Username for login"
-  default = ""
-}
-variable "cluster_login_password" {
-  type = string
-  description = "Password for login"
-  default = ""
-}
-variable "cluster_login_token" {
-  type = string
-  description = "Token used for authentication"
-}
-variable "cluster_skip" {
-  type = bool
-  description = "Flag indicating that the cluster login has already been performed"
-  default = false
-}
-variable "cluster_cluster_version" {
-  type = string
-  description = "[Deprecated] The version of the cluster (passed through to the output)"
-  default = ""
-}
-variable "cluster_ingress_subdomain" {
-  type = string
-  description = "[Deprecated] The ingress subdomain of the cluster (passed through to the output)"
-  default = ""
-}
-variable "cluster_tls_secret_name" {
-  type = string
-  description = "[Deprecated] The name of the secret containing the tls certificates for the ingress subdomain (passed through to the output)"
-  default = ""
-}
-variable "cluster_ca_cert" {
-  type = string
-  description = "The base64 encoded ca certificate"
-  default = ""
-}
-variable "cluster_ca_cert_file" {
-  type = string
-  description = "The path to the file that contains the ca certificate"
-  default = ""
 }

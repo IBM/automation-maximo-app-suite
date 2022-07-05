@@ -1,0 +1,16 @@
+"105":
+  names:
+  - "105-aws-vpc-openshift"
+  - "105-azure-ocp-ipi"
+  - "105-ibm-vpc-openshift"
+  mock: "105-mock"
+"200":
+  names:
+  - "200-openshift-gitops"
+mock_200: "mock"
+names_210:
+  - "210-aws-portworx-storage"
+  - "210-azure-portworx-storage"
+  - "210-ibm-odf-storage"
+  - "210-ibm-portworx-storage"
+mock_210: "mock"
