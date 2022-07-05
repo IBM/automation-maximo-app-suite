@@ -1,6 +1,90 @@
+variable "gitea_instance_name" {
+  type = string
+  description = "The name for the instance"
+  default = "gitea"
+}
+variable "gitea_username" {
+  type = string
+  description = "The username for the instance"
+  default = "gitea-admin"
+}
+variable "gitea_password" {
+  type = string
+  description = "The password for the instance"
+  default = ""
+}
+variable "config_banner_background_color" {
+  type = string
+  description = "The background color of the top banner. This value can be a named color (e.g. purple, red) or an RGB value (#FF0000)."
+  default = "purple"
+}
+variable "config_banner_text_color" {
+  type = string
+  description = "The text color for the top banner. This value can be a named color (e.g. purple, red) or an RGB value (#FF0000)."
+  default = "white"
+}
+variable "config_banner_text" {
+  type = string
+  description = "The text that will appear in the top banner in the cluster"
+}
+variable "gitops-console-link-job_cluster_ingress_hostname" {
+  type = string
+  description = "Ingress hostname of the IKS cluster."
+  default = ""
+}
+variable "gitops-console-link-job_cluster_type" {
+  type = string
+  description = "The cluster type (openshift or ocp3 or ocp4 or kubernetes)"
+  default = "ocp4"
+}
+variable "gitops-console-link-job_tls_secret_name" {
+  type = string
+  description = "The name of the secret containing the tls certificate values"
+  default = ""
+}
+variable "gitea_namespace_name" {
+  type = string
+  description = "The value that should be used for the namespace"
+  default = "gitea"
+}
+variable "gitea_namespace_ci" {
+  type = bool
+  description = "Flag indicating that this namespace will be used for development (e.g. configmaps and secrets)"
+  default = false
+}
+variable "gitea_namespace_create_operator_group" {
+  type = bool
+  description = "Flag indicating that an operator group should be created in the namespace"
+  default = true
+}
+variable "gitea_namespace_argocd_namespace" {
+  type = string
+  description = "The namespace where argocd has been deployed"
+  default = "openshift-gitops"
+}
+variable "toolkit_namespace_name" {
+  type = string
+  description = "The value that should be used for the namespace"
+  default = "toolkit"
+}
+variable "toolkit_namespace_ci" {
+  type = bool
+  description = "Flag indicating that this namespace will be used for development (e.g. configmaps and secrets)"
+  default = false
+}
+variable "toolkit_namespace_create_operator_group" {
+  type = bool
+  description = "Flag indicating that an operator group should be created in the namespace"
+  default = true
+}
+variable "toolkit_namespace_argocd_namespace" {
+  type = string
+  description = "The namespace where argocd has been deployed"
+  default = "openshift-gitops"
+}
 variable "gitops_repo_host" {
   type = string
-  description = "The host for the git repository."
+  description = "The host for the git repository. The git host used can be a GitHub, GitHub Enterprise, Gitlab, Bitbucket, Gitea or Azure DevOps server. If the host is null assumes in-cluster Gitea instance will be used."
   default = ""
 }
 variable "gitops_repo_type" {
@@ -10,7 +94,7 @@ variable "gitops_repo_type" {
 }
 variable "gitops_repo_org" {
   type = string
-  description = "The org/group where the git repository exists/will be provisioned."
+  description = "The org/group where the git repository exists/will be provisioned. If the value is left blank then the username org will be used."
   default = ""
 }
 variable "gitops_repo_project" {
@@ -24,26 +108,6 @@ variable "gitops_repo_username" {
   default = ""
 }
 variable "gitops_repo_token" {
-  type = string
-  description = "The personal access token used to access the repository"
-  default = ""
-}
-variable "gitops_repo_gitea_host" {
-  type = string
-  description = "The host for the git repository."
-  default = ""
-}
-variable "gitops_repo_gitea_org" {
-  type = string
-  description = "The org/group where the git repository exists/will be provisioned."
-  default = ""
-}
-variable "gitops_repo_gitea_username" {
-  type = string
-  description = "The username of the user with access to the repository"
-  default = ""
-}
-variable "gitops_repo_gitea_token" {
   type = string
   description = "The personal access token used to access the repository"
   default = ""
@@ -86,55 +150,6 @@ variable "argocd-bootstrap_create_webhook" {
   type = bool
   description = "Flag indicating that a webhook should be created in the gitops repo to notify argocd of changes"
   default = true
-}
-variable "gitops-cluster-config_banner_background_color" {
-  type = string
-  description = "The background color of the top banner. This value can be a named color (e.g. purple, red) or an RGB value (#FF0000)."
-  default = "purple"
-}
-variable "gitops-cluster-config_banner_text_color" {
-  type = string
-  description = "The text color for the top banner. This value can be a named color (e.g. purple, red) or an RGB value (#FF0000)."
-  default = "white"
-}
-variable "gitops-cluster-config_banner_text" {
-  type = string
-  description = "The text that will appear in the top banner in the cluster"
-}
-variable "gitops-console-link-job_cluster_ingress_hostname" {
-  type = string
-  description = "Ingress hostname of the IKS cluster."
-  default = ""
-}
-variable "gitops-console-link-job_cluster_type" {
-  type = string
-  description = "The cluster type (openshift or ocp3 or ocp4 or kubernetes)"
-  default = "ocp4"
-}
-variable "gitops-console-link-job_tls_secret_name" {
-  type = string
-  description = "The name of the secret containing the tls certificate values"
-  default = ""
-}
-variable "toolkit_namespace_name" {
-  type = string
-  description = "The value that should be used for the namespace"
-  default = "toolkit"
-}
-variable "toolkit_namespace_ci" {
-  type = bool
-  description = "Flag indicating that this namespace will be used for development (e.g. configmaps and secrets)"
-  default = false
-}
-variable "toolkit_namespace_create_operator_group" {
-  type = bool
-  description = "Flag indicating that an operator group should be created in the namespace"
-  default = true
-}
-variable "toolkit_namespace_argocd_namespace" {
-  type = string
-  description = "The namespace where argocd has been deployed"
-  default = "openshift-gitops"
 }
 variable "server_url" {
   type = string

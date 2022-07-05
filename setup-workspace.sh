@@ -14,6 +14,7 @@ Usage()
    echo "  -c     (optional) Cluster ingress - the subdomain for ingress urls into the cluster"
    echo "  -n     (optional) Prefix that should be used for all variables"
    echo "  -x     (optional) Portworx spec file - the name of the file containing the Portworx configuration spec yaml"
+   echo "  -g     (optional) the git host that will be used for the gitops repo. If left blank gitea will be used by default. (Github, Github Enterprise, Gitlab, Bitbucket, Azure DevOps, and Gitea servers are supported)"
    echo "  -h     Print this help"
    echo
 }
@@ -23,6 +24,7 @@ CLOUD_PROVIDER=""
 STORAGE=""
 PREFIX_NAME=""
 PORTWORX_SPEC_FILE=""
+GIT_HOST=""
 
 if [[ "$1" == "-h" ]]; then
   Usage
@@ -30,7 +32,7 @@ if [[ "$1" == "-h" ]]; then
 fi
 
 # Get the options
-while getopts ":p:s:n:c:x:h:" option; do
+while getopts ":p:s:n:c:x:g:h:" option; do
    case $option in
       h) # display Help
          Usage
@@ -45,6 +47,8 @@ while getopts ":p:s:n:c:x:h:" option; do
          PREFIX_NAME=$OPTARG;;
       x) # Enter a name
          PORTWORX_SPEC_FILE=$OPTARG;;
+      g) # Enter a name
+         GIT_HOST=$OPTARG;;
      \?) # Invalid option
          echo "Error: Invalid option"
          Usage
@@ -210,6 +214,7 @@ cd "${WORKSPACE_DIR}"
 cat "${SCRIPT_DIR}/terraform.tfvars.template" | \
   sed "s/PREFIX/${PREFIX_NAME}/g" | \
   sed "s/CLUSTER_INGRESS/${CLUSTER_INGRESS}/g" | \
+  sed "s/GIT_HOST/${GIT_HOST}/g" | \
   sed "s/RWX_STORAGE/${RWX_STORAGE}/g" | \
   sed "s/RWO_STORAGE/${RWO_STORAGE}/g" | \
   sed "s/PORTWORX_SPEC_FILE/${PORTWORX_SPEC_FILE_BASENAME}/g" \

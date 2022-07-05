@@ -1,5 +1,5 @@
 module "gitops_repo" {
-  source = "github.com/cloud-native-toolkit/terraform-tools-gitops?ref=v1.19.4"
+  source = "github.com/cloud-native-toolkit/terraform-tools-gitops?ref=v1.19.5"
 
   branch = var.gitops_repo_branch
   gitea_host = var.gitops_repo_gitea_host
@@ -55,7 +55,7 @@ module "portworx_namespace" {
 }
 module "resource_group" {
   source = "cloud-native-toolkit/resource-group/ibm"
-  version = "3.2.15"
+  version = "3.2.16"
 
   ibmcloud_api_key = var.ibmcloud_api_key
   resource_group_name = var.resource_group_name

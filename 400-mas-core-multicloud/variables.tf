@@ -56,6 +56,21 @@ variable "gitops-cp-maximo_certmgr_namespace" {
   description = "Namespace of the cert-manager: should stay default value unless using another cert manager"
   default = "ibm-common-services"
 }
+variable "gitops-cp-maximo_issuer_name" {
+  type = string
+  description = "Certificate Issuer name on the cluster to use if not using self signed certs"
+  default = ""
+}
+variable "gitops-cp-maximo_issuer_duration" {
+  type = string
+  description = "Certificate duration to use if not using self signed certs - Example: 8760h0m0s"
+  default = ""
+}
+variable "gitops-cp-maximo_issuer_renewbefore" {
+  type = string
+  description = "Certificate renew before definion to use if not using self signed certs - Example: 720h0m0s"
+  default = ""
+}
 variable "sls_catalog_namespace" {
   type = string
   description = "The namespace where the catalog has been deployed"
@@ -158,7 +173,7 @@ variable "bas-namespace_argocd_namespace" {
 }
 variable "gitops_repo_host" {
   type = string
-  description = "The host for the git repository."
+  description = "The host for the git repository. The git host used can be a GitHub, GitHub Enterprise, Gitlab, Bitbucket, Gitea or Azure DevOps server. If the host is null assumes in-cluster Gitea instance will be used."
   default = ""
 }
 variable "gitops_repo_type" {
@@ -168,7 +183,7 @@ variable "gitops_repo_type" {
 }
 variable "gitops_repo_org" {
   type = string
-  description = "The org/group where the git repository exists/will be provisioned."
+  description = "The org/group where the git repository exists/will be provisioned. If the value is left blank then the username org will be used."
   default = ""
 }
 variable "gitops_repo_project" {
@@ -188,17 +203,17 @@ variable "gitops_repo_token" {
 }
 variable "gitops_repo_gitea_host" {
   type = string
-  description = "The host for the git repository."
+  description = "The host for the default gitea repository."
   default = ""
 }
 variable "gitops_repo_gitea_org" {
   type = string
-  description = "The org/group where the git repository exists/will be provisioned."
+  description = "The org/group for the default gitea repository. If not provided, the value will default to the username org"
   default = ""
 }
 variable "gitops_repo_gitea_username" {
   type = string
-  description = "The username of the user with access to the repository"
+  description = "The username of the default gitea repository"
   default = ""
 }
 variable "gitops_repo_gitea_token" {

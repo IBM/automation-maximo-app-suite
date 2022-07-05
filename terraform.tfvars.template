@@ -19,11 +19,8 @@ file_storage_class="RWO_STORAGE"
 ## <your block storage on aws: gp2, on azure: managed-premium, on ibm: ibmc-vpc-block-10iops-tier>
 block_storage_class="RWO_STORAGE"
 
-## gitops-repo_host: The host for the git repository.
-gitops_repo_host="github.com"
-
-## gitops-repo_type: The type of the hosted git repository (github or gitlab).
-gitops_repo_type="github"
+## gitops_repo_host: The host for the git repository. GitHub, GitHub Enterprise, Gitlab, Bitbucket, Azure DevOps, and Gitea git servers are supported. If the value is left empty then Gitea will be used by default
+gitops_repo_host="GIT_HOST"
 
 ## gitops-repo_org: The org/group where the git repository exists/will be provisioned.
 ## your gitorg - if left blank the value will default to your username

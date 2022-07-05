@@ -1,0 +1,40 @@
+# SOURCE: https://install.portworx.com/?operator=true&mc=false&kbver=&oem=esse&user=feec5406-26f8-49c6-b723-db56061ed010&b=true&kd=type%3DPremium_LRS%2Csize%3D150&s=%22type%3DPremium_LRS%2Csize%3D1000%22&c=px-cluster-42e1582d-a1fc-490f-becf-ee9ace9249f3&osft=true&stork=true&csi=false&tel=false&st=k8s
+kind: StorageCluster
+apiVersion: core.libopenstorage.org/v1
+metadata:
+  name: px-cluster-42e1582d-a1fc-490f-becf-ee9ace9249f3
+  namespace: kube-system
+  annotations:
+    portworx.io/install-source: "https://install.portworx.com/?operator=true&mc=false&kbver=&oem=esse&user=feec5406-26f8-49c6-b723-db56061ed010&b=true&kd=type%3DPremium_LRS%2Csize%3D150&s=%22type%3DPremium_LRS%2Csize%3D1000%22&c=px-cluster-42e1582d-a1fc-490f-becf-ee9ace9249f3&osft=true&stork=true&csi=false&tel=false&st=k8s"
+    portworx.io/is-openshift: "true"
+    portworx.io/misc-args: "--oem esse"
+spec:
+  image: portworx/oci-monitor:2.6.5
+  imagePullPolicy: Always
+  kvdb:
+    internal: true
+  cloudStorage:
+    deviceSpecs:
+    - type=Premium_LRS,size=1000
+    kvdbDeviceSpec: type=Premium_LRS,size=150
+  secretsProvider: k8s
+  stork:
+    enabled: true
+    args:
+      webhook-controller: "false"
+  autopilot:
+    enabled: true
+    providers:
+    - name: default
+      type: prometheus
+      params:
+        url: http://prometheus:9090
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: px-essential
+  namespace: kube-system
+data:
+  px-essen-user-id: ZmVlYzU0MDYtMjZmOC00OWM2LWI3MjMtZGI1NjA2MWVkMDEw
+  px-osb-endpoint: aHR0cHM6Ly9weGVzc2VudGlhbHMucG9ydHdvcnguY29tL29zYi9iaWxsaW5nL3YxL3JlZ2lzdGVy

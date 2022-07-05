@@ -12,23 +12,24 @@ metadata:
       bootstraps it to a gitops repository
 spec:
   modules:
-    - name: gitops-repo
-      alias: gitops_repo
-      version: v1.19.4
-    - name: argocd-bootstrap
-      alias: argocd-bootstrap
-      version: v1.12.0
-      variables:
-        - name: create_webhook
-          value: true
-        - name: prefix
-          value: maximo
+    - name: gitea
+      alias: gitea
+      version: v0.3.1
+      dependencies:
+        - id: namespace
+          ref: gitea_namespace
     - name: gitops-cluster-config
-      alias: gitops-cluster-config
+      alias: config
       version: v1.0.0
     - name: gitops-console-link-job
       alias: gitops-console-link-job
       version: v1.4.6
+    - name: gitops-namespace
+      alias: gitea_namespace
+      version: v1.11.2
+      variables: &ref_0
+        - name: name
+          value: gitea
     - name: gitops-namespace
       alias: toolkit_namespace
       version: v1.11.2
@@ -36,21 +37,42 @@ spec:
       variables:
         - name: name
           value: toolkit
+    - name: gitops-repo
+      alias: gitops_repo
+      version: v1.19.5
+    - name: argocd-bootstrap
+      alias: argocd-bootstrap
+      version: v1.12.0
+      variables:
+        - name: create_webhook
+          value: true
     - name: ocp-login
       alias: cluster
       version: v1.3.1
     - name: olm
       version: v1.3.2
+    - name: gitops-namespace
+      alias: gitea_namespace
+      version: v3.2.3
+      variables: *ref_0
     - name: sealed-secret-cert
       version: v1.0.1
   variables:
+    - name: config_banner_text
+      type: string
+      description: The text that will appear in the top banner in the cluster
     - name: gitops_repo_host
       type: string
-      description: The host for the git repository.
+      description: >-
+        The host for the git repository. The git host used can be a GitHub,
+        GitHub Enterprise, Gitlab, Bitbucket, Gitea or Azure DevOps server. If
+        the host is null assumes in-cluster Gitea instance will be used.
       defaultValue: ''
     - name: gitops_repo_org
       type: string
-      description: The org/group where the git repository exists/will be provisioned.
+      description: >-
+        The org/group where the git repository exists/will be provisioned. If
+        the value is left blank then the username org will be used.
       defaultValue: ''
     - name: gitops_repo_project
       type: string
@@ -72,9 +94,6 @@ spec:
       description: >-
         The short name of the repository (i.e. the part after the org/group
         name)
-    - name: gitops-cluster-config_banner_text
-      type: string
-      description: The text that will appear in the top banner in the cluster
     - name: server_url
       type: string
       description: The url for the OpenShift api
