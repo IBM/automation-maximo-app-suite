@@ -1,5 +1,5 @@
 module "gitops_repo" {
-  source = "github.com/cloud-native-toolkit/terraform-tools-gitops?ref=v1.19.4"
+  source = "github.com/cloud-native-toolkit/terraform-tools-gitops?ref=v1.20.2"
 
   branch = var.gitops_repo_branch
   gitea_host = var.gitops_repo_gitea_host
@@ -20,7 +20,7 @@ module "gitops_repo" {
   username = var.gitops_repo_username
 }
 module "gitops-ibm-portworx" {
-  source = "github.com/cloud-native-toolkit/terraform-gitops-ibm-portworx?ref=v0.2.2"
+  source = "github.com/cloud-native-toolkit/terraform-gitops-ibm-portworx?ref=v0.3.0"
 
   capacity = var.gitops-ibm-portworx_capacity
   encryption_key = var.gitops-ibm-portworx_encryption_key
@@ -55,9 +55,10 @@ module "portworx_namespace" {
 }
 module "resource_group" {
   source = "cloud-native-toolkit/resource-group/ibm"
-  version = "3.2.15"
+  version = "3.3.0"
 
   ibmcloud_api_key = var.ibmcloud_api_key
+  purge_volumes = var.purge_volumes
   resource_group_name = var.resource_group_name
   sync = var.resource_group_sync
 }

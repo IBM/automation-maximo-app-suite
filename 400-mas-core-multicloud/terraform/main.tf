@@ -28,7 +28,7 @@ module "bas-namespace" {
   server_name = module.gitops_repo.server_name
 }
 module "gitops_repo" {
-  source = "github.com/cloud-native-toolkit/terraform-tools-gitops?ref=v1.19.4"
+  source = "github.com/cloud-native-toolkit/terraform-tools-gitops?ref=v1.20.2"
 
   branch = var.gitops_repo_branch
   gitea_host = var.gitops_repo_gitea_host
@@ -59,7 +59,7 @@ module "gitops-cp-catalogs" {
   server_name = module.gitops_repo.server_name
 }
 module "gitops-cp-maximo" {
-  source = "github.com/cloud-native-toolkit/terraform-gitops-cp-maximo?ref=v1.2.0"
+  source = "github.com/cloud-native-toolkit/terraform-gitops-cp-maximo?ref=v1.3.2"
 
   catalog_name = module.gitops-cp-catalogs.catalog_ibmoperators
   catalog_namespace = var.gitops-cp-maximo_catalog_namespace
@@ -70,6 +70,9 @@ module "gitops-cp-maximo" {
   gitops_config = module.gitops_repo.gitops_config
   installPlan = var.gitops-cp-maximo_installPlan
   instanceid = var.gitops-cp-maximo_instanceid
+  issuer_duration = var.gitops-cp-maximo_issuer_duration
+  issuer_name = var.gitops-cp-maximo_issuer_name
+  issuer_renewbefore = var.gitops-cp-maximo_issuer_renewbefore
   kubeseal_cert = module.gitops_repo.sealed_secrets_cert
   server_name = module.gitops_repo.server_name
   versionid = var.gitops-cp-maximo_versionid

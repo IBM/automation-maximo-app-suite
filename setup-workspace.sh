@@ -10,7 +10,7 @@ Usage()
    echo "Usage: setup-workspace.sh"
    echo "  options:"
    echo "  -p     Cloud provider (aws, azure, ibm)"
-   echo "  -s     Storage (portworx or odf or <RWX storage class>)"
+   echo "  -s     Storage (portworx or odf)"
    echo "  -c     (optional) Cluster ingress - the subdomain for ingress urls into the cluster"
    echo "  -n     (optional) Prefix that should be used for all variables"
    echo "  -x     (optional) Portworx spec file - the name of the file containing the Portworx configuration spec yaml"
@@ -87,22 +87,12 @@ if [[ -z "${STORAGE}" ]] && [[ "${CLOUD_PROVIDER}" == "ibm" ]]; then
 
   echo ""
 elif [[ -z "${STORAGE}" ]]; then
-  PS3="Select the storage provider: "
+  STORAGE="portworx"
+fi
 
-  select storage in portworx other; do
-    if [[ -n "${storage}" ]]; then
-      STORAGE="${storage}"
-      break
-    fi
-  done
-
-  if [[ "${STORAGE}" == "other" ]]; then
-    echo ""
-    echo -n "Provide the read-write-many (RWX) storage class: "
-    read -r STORAGE
-  fi
-
-  echo ""
+if [[ ! "${STORAGE}" =~ ^odf|portworx ]]; then
+  echo "Invalid value for storage provider: ${STORAGE}" >&2
+  exit 1
 fi
 
 if [[ -z "${PREFIX_NAME}" ]]; then
@@ -125,19 +115,17 @@ if [[ "${STORAGE}" == "portworx" ]]; then
   RWX_STORAGE="portworx-rwx-gp3-sc"
 elif [[ "${STORAGE}" == "odf" ]]; then
   RWX_STORAGE="ocs-storagecluster-cephfs"
-elif [[ -n "${STORAGE}" ]]; then
-  RWX_STORAGE="${STORAGE}"
 else
   RWX_STORAGE="<read-write-many storage class (e.g. portworx: portworx-rwx-gp3-sc or odf: ocs-storagecluster-cephfs)>"
 fi
 
-if command -v oc 1> /dev/null 2> /dev/null && ! oc login "${TF_VAR_server_url}" --token="${TF_VAR_cluster_login_token}" --insecure-skip-tls-verify=true 1> /dev/null 2> /dev/null; then
-  echo -e "${YELLOW}WARNING: ${WHITE}Unable to log into cluster.${NC} Check the cluster credentials in ${WHITE}credentials.properties${NC}"
-fi
-
-if [[ "${CLOUD_PROVIDER}" =~ aws|azure ]] && [[ "${STORAGE}" == "portworx" ]] && [[ -z "${PORTWORX_SPEC_FILE}" ]]; then
+if [[ "${CLOUD_PROVIDER}" =~ aws|azure ]] && [[ -z "${PORTWORX_SPEC_FILE}" ]]; then
   if command -v oc 1> /dev/null 2> /dev/null; then
     echo "Looking for existing portworx storage class: ${RWX_STORAGE}"
+
+    if ! oc login "${TF_VAR_server_url}" --token="${TF_VAR_cluster_login_token}" --insecure-skip-tls-verify=true 1> /dev/null; then
+      exit 1
+    fi
 
     if oc get storageclass "${RWX_STORAGE}" 1> /dev/null 2> /dev/null; then
       echo "  Found existing portworx installation. Skipping storage layer..."
@@ -173,8 +161,10 @@ if [[ -z "${CLUSTER_INGRESS}" ]]; then
   if command -v oc 1> /dev/null 2> /dev/null && [[ -n "$TF_VAR_server_url" ]] && [[ -n "$TF_VAR_server_url" ]]; then
     echo "Looking up cluster ingress"
 
-    if oc get ingresses.config/cluster 1> /dev/null 2> /dev/null; then
+    if oc login "${TF_VAR_server_url}" --token="${TF_VAR_cluster_login_token}" --insecure-skip-tls-verify=true 1> /dev/null; then
       CLUSTER_INGRESS=$(oc get ingresses.config/cluster -o jsonpath={.spec.domain})
+    else
+      exit 1
     fi
   fi
 
@@ -189,7 +179,7 @@ if [[ -z "${CLUSTER_INGRESS}" ]]; then
   fi
 fi
 
-SCRIPT_DIR=$(cd $(dirname "$0"); pwd -P)
+SCRIPT_DIR=$(cd $(dirname $0); pwd -P)
 WORKSPACES_DIR="${SCRIPT_DIR}/../workspaces"
 WORKSPACE_DIR="${WORKSPACES_DIR}/current"
 
@@ -232,7 +222,7 @@ cp "${SCRIPT_DIR}/destroy-all.sh" "${WORKSPACE_DIR}/destroy-all.sh"
 
 WORKSPACE_DIR=$(cd "${WORKSPACE_DIR}"; pwd -P)
 
-if [[ -z "${PORTWORX_SPEC_FILE}" ]] || [[ "${PORTWORX_SPEC_FILE}" == "installed" ]]; then
+if [[ "${PORTWORX_SPEC_FILE}" == "installed" ]]; then
   ALL_ARCH="200|400"
 else
   ALL_ARCH="200|210|400"
