@@ -5,6 +5,7 @@ variable "ibmcloud_api_key" {
 variable "odf_namespace_name" {
   type = string
   description = "The value that should be used for the namespace"
+  default = "odf"
 }
 variable "odf_namespace_ci" {
   type = bool

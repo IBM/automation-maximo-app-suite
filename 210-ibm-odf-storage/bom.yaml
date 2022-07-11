@@ -22,6 +22,9 @@ spec:
       alias: odf_namespace
       version: v1.11.2
       default: true
+      variables:
+        - name: name
+          value: odf
     - name: gitops-repo
       alias: gitops_repo
       version: v1.20.2
@@ -29,9 +32,6 @@ spec:
     - name: ibmcloud_api_key
       type: string
       description: The api key for IBM Cloud access
-    - name: odf_namespace_name
-      type: string
-      description: The value that should be used for the namespace
     - name: gitops_repo_host
       type: string
       description: >-
