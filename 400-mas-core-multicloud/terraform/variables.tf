@@ -34,7 +34,7 @@ variable "cluster_ingress" {
 variable "gitops-cp-maximo_instanceid" {
   type = string
   description = "instance name for to use for MAS Suite"
-  default = "masapps"
+  default = "masdemo"
 }
 variable "gitops-cp-maximo_versionid" {
   type = string
