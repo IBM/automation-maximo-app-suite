@@ -7,6 +7,8 @@ SRC_DIR="${SCRIPT_DIR}/automation"
 
 AUTOMATION_BASE=$(basename "${SCRIPT_DIR}")
 
+DOCKER_CMD="${1:-docker}"
+
 if [[ ! -d "${SRC_DIR}" ]]; then
   SRC_DIR="${SCRIPT_DIR}"
 fi
@@ -42,7 +44,6 @@ CONTAINER_NAME="cli-tools-${SUFFIX}"
 
 echo "Cleaning up old container: ${CONTAINER_NAME}"
 
-DOCKER_CMD="docker"
 ${DOCKER_CMD} kill ${CONTAINER_NAME} 1> /dev/null 2> /dev/null
 ${DOCKER_CMD} rm ${CONTAINER_NAME} 1> /dev/null 2> /dev/null
 
