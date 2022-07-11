@@ -13,7 +13,7 @@ module "aws-portworx" {
   secret_key = var.secret_key
 }
 module "cluster" {
-  source = "github.com/cloud-native-toolkit/terraform-ocp-login?ref=v1.3.1"
+  source = "github.com/cloud-native-toolkit/terraform-ocp-login?ref=v1.4.0"
 
   ca_cert = var.cluster_ca_cert
   ca_cert_file = var.cluster_ca_cert_file
