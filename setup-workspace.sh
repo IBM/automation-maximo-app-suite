@@ -11,7 +11,6 @@ Usage()
    echo "  options:"
    echo "  -p        Cloud provider (aws, azure, ibm)"
    echo "  -s        Storage (portworx or odf or <RWX storage class>)"
-   echo "  -c        (optional) Cluster ingress - the subdomain for ingress urls into the cluster"
    echo "  -n        (optional) Prefix that should be used for all variables"
    echo "  -x        (optional) Portworx spec file - the name of the file containing the Portworx configuration spec yaml"
    echo "  --append  Adds the configuration to the existing workspace"
@@ -19,7 +18,6 @@ Usage()
    echo
 }
 
-CLUSTER_INGRESS=""
 CLOUD_PROVIDER=""
 STORAGE=""
 PREFIX_NAME=""
@@ -31,7 +29,7 @@ if [[ "$1" == "-h" ]]; then
 fi
 
 # Get the options
-while getopts ":p:s:n:c:x:h:" option; do
+while getopts ":p:s:n:x:h:" option; do
    case $option in
       h) # display Help
          Usage
@@ -40,8 +38,6 @@ while getopts ":p:s:n:c:x:h:" option; do
          CLOUD_PROVIDER=$OPTARG;;
       s) # Enter a name
          STORAGE=$OPTARG;;
-      c) # Enter a name
-         CLUSTER_INGRESS=$OPTARG;;
       n) # Enter a name
          PREFIX_NAME=$OPTARG;;
       x) # Enter a name
@@ -140,13 +136,13 @@ else
   RWX_STORAGE="<read-write-many storage class (e.g. portworx: portworx-rwx-gp3-sc or odf: ocs-storagecluster-cephfs)>"
 fi
 
-if command -v oc 1> /dev/null 2> /dev/null && ! oc login "${TF_VAR_server_url}" --token="${TF_VAR_cluster_login_token}" --insecure-skip-tls-verify=true 1> /dev/null 2> /dev/null; then
-  echo -e "${YELLOW}WARNING: ${WHITE}Unable to log into cluster.${NC} Check the cluster credentials in ${WHITE}credentials.properties${NC}"
-fi
-
 if [[ "${CLOUD_PROVIDER}" =~ aws|azure ]] && [[ "${STORAGE}" == "portworx" ]] && [[ -z "${PORTWORX_SPEC_FILE}" ]]; then
   if command -v oc 1> /dev/null 2> /dev/null; then
     echo "Looking for existing portworx storage class: ${RWX_STORAGE}"
+
+    if command -v oc 1> /dev/null 2> /dev/null && ! oc login "${TF_VAR_server_url}" --token="${TF_VAR_cluster_login_token}" --insecure-skip-tls-verify=true 1> /dev/null 2> /dev/null; then
+      echo -e "${YELLOW}WARNING: ${WHITE}Unable to log into cluster.${NC} Check the cluster credentials in ${WHITE}credentials.properties${NC}"
+    fi
 
     if oc get storageclass "${RWX_STORAGE}" 1> /dev/null 2> /dev/null; then
       echo "  Found existing portworx installation. Skipping storage layer..."
@@ -176,26 +172,6 @@ fi
 if [[ -n "${PORTWORX_SPEC_FILE}" ]] && [[ "${PORTWORX_SPEC_FILE}" != "installed" ]] && [[ ! -f "${PORTWORX_SPEC_FILE}" ]]; then
   echo "Portworx spec file not found: ${PORTWORX_SPEC_FILE}" >&2
   exit 1
-fi
-
-if [[ -z "${CLUSTER_INGRESS}" ]]; then
-  if command -v oc 1> /dev/null 2> /dev/null && [[ -n "$TF_VAR_server_url" ]] && [[ -n "$TF_VAR_server_url" ]]; then
-    echo "Looking up cluster ingress"
-
-    if oc get ingresses.config/cluster 1> /dev/null 2> /dev/null; then
-      CLUSTER_INGRESS=$(oc get ingresses.config/cluster -o jsonpath={.spec.domain})
-    fi
-  fi
-
-  if [[ -z "${CLUSTER_INGRESS}" ]]; then
-    echo -e "${YELLOW}Unable to lookup cluster ingress.${NC} The value can be retrieved by running:"
-    echo -e "  ${WHITE}oc get ingresses.config/cluster -o jsonpath={.spec.domain}${NC}"
-    echo -n "Cluster ingress: "
-    read -r CLUSTER_INGRESS
-  else
-    echo "  Found cluster ingress: ${CLUSTER_INGRESS}"
-    echo ""
-  fi
 fi
 
 SCRIPT_DIR=$(cd $(dirname "$0"); pwd -P)
@@ -228,7 +204,6 @@ cd "${WORKSPACE_DIR}"
 
 cat "${SCRIPT_DIR}/terraform.tfvars.template" | \
   sed "s/PREFIX/${PREFIX_NAME}/g" | \
-  sed "s/CLUSTER_INGRESS/${CLUSTER_INGRESS}/g" | \
   sed "s/RWX_STORAGE/${RWX_STORAGE}/g" | \
   sed "s/RWO_STORAGE/${RWO_STORAGE}/g" | \
   sed "s/PORTWORX_SPEC_FILE/${PORTWORX_SPEC_FILE_BASENAME}/g" \
