@@ -9,12 +9,12 @@ Usage()
    echo
    echo "Usage: setup-workspace.sh"
    echo "  options:"
-   echo "  -p        Cloud provider (aws, azure, ibm)"
-   echo "  -s        Storage (portworx or odf or <RWX storage class>)"
-   echo "  -n        (optional) Prefix that should be used for all variables"
-   echo "  -x        (optional) Portworx spec file - the name of the file containing the Portworx configuration spec yaml"
-   echo "  --append  Adds the configuration to the existing workspace"
-   echo "  -h        Print this help"
+   echo "  -p      Cloud provider (aws, azure, ibm)"
+   echo "  -s      Storage (portworx or odf or <RWX storage class>)"
+   echo "  -n      (optional) Prefix that should be used for all variables"
+   echo "  -x      (optional) Portworx spec file - the name of the file containing the Portworx configuration spec yaml"
+   echo "  -a      Adds the configuration to the existing workspace"
+   echo "  -h      Print this help"
    echo
 }
 
@@ -34,8 +34,9 @@ while getopts ":p:s:n:x:a:h:" option; do
    case $option in
       h) # display Help
          Usage
-         exit 1;;
+         exit 0;;
       a)
+         echo "Got append flag"
          APPEND="true";;
       p)
          CLOUD_PROVIDER=$OPTARG;;
@@ -180,15 +181,22 @@ if [[ -n "${PREFIX_NAME}" ]]; then
   PREFIX_NAME="${PREFIX_NAME}-"
 fi
 
-if [[ -d "${WORKSPACE_DIR}" ]] && [[ "${APPEND}" != "true" ]]; then
-  DATE=$(date "+%Y%m%d%H%M")
-  mv "${WORKSPACE_DIR}" "${WORKSPACES_DIR}/workspace-${DATE}"
+ARG_ARRAY=( "$@" )
 
-  cp "${SCRIPT_DIR}/terraform.tfvars" "${WORKSPACES_DIR}/workspace-${DATE}/terraform.tfvars"
+if [[ " ${ARG_ARRAY[*]} " =~ " -a " ]]; then
+  APPEND="true"
 fi
 
 echo "Setting up workspace in '${WORKSPACE_DIR}'"
 echo "*****"
+
+if [[ -d "${WORKSPACE_DIR}" ]] && [[ "${APPEND}" != "true" ]]; then
+  DATE=$(date "+%Y%m%d%H%M")
+  echo "  Saving current workspaces directory to workspace-${DATE}"
+  mv "${WORKSPACE_DIR}" "${WORKSPACES_DIR}/workspace-${DATE}"
+
+  cp "${SCRIPT_DIR}/maximo.tfvars" "${WORKSPACES_DIR}/workspace-${DATE}/maximo.tfvars"
+fi
 
 mkdir -p "${WORKSPACE_DIR}"
 
@@ -207,10 +215,13 @@ cat "${SCRIPT_DIR}/terraform.tfvars.template" | \
   sed "s/PORTWORX_SPEC_FILE/${PORTWORX_SPEC_FILE_BASENAME}/g" \
   > "${SCRIPT_DIR}/maximo.tfvars"
 
-ln -s "${SCRIPT_DIR}/maximo.tfvars" ./maximo.tfvars
+if [[ ! -e ./maximo.tfvars ]]; then
+  ln -s "${SCRIPT_DIR}/maximo.tfvars" ./maximo.tfvars
+fi
 
-cp "${SCRIPT_DIR}/apply-all.sh" "${WORKSPACE_DIR}/apply-all.sh"
-cp "${SCRIPT_DIR}/destroy-all.sh" "${WORKSPACE_DIR}/destroy-all.sh"
+cp "${SCRIPT_DIR}/apply-all.sh" "${WORKSPACE_DIR}"
+cp "${SCRIPT_DIR}/destroy-all.sh" "${WORKSPACE_DIR}"
+cp -R "${SCRIPT_DIR}/.mocks" "${WORKSPACE_DIR}"
 
 WORKSPACE_DIR=$(cd "${WORKSPACE_DIR}"; pwd -P)
 
@@ -225,11 +236,12 @@ find ${SCRIPT_DIR}/. -maxdepth 1 -type d | grep -vE "[.][.]/[.].*" | grep -v wor
 do
   name=$(echo "$dir" | sed -E "s/.*\///")
 
-  if [[ ! -d "${SCRIPT_DIR}/${name}/main.tf" ]]; then
+  if [[ ! -f "${SCRIPT_DIR}/${name}/main.tf" ]]; then
     continue
   fi
 
   if [[ ! "${name}" =~ ${ALL_ARCH} ]]; then
+    echo "  Layer doesn't match architecture. Skipping layer: ${name}"
     continue
   fi
 
@@ -238,12 +250,12 @@ do
     BOM_PROVIDER=$(grep -E "^ +platform" "${SCRIPT_DIR}/${name}/bom.yaml" | sed -E "s~[^:]+: [\"']?(.*)[\"']?~\1~g")
 
     if [[ -n "${BOM_PROVIDER}" ]] && [[ "${BOM_PROVIDER}" != "${CLOUD_PROVIDER}" ]]; then
-      echo "  Skipping ${name} because it doesn't match ${CLOUD_PROVIDER}"
+      echo "  Skipping ${name} because it doesn't match ${CLOUD_PROVIDER} cloud provider"
       continue
     fi
 
     if [[ -n "${BOM_STORAGE}" ]] && [[ "${BOM_STORAGE}" != "${STORAGE}" ]]; then
-      echo "  Skipping ${name} because it doesn't match ${STORAGE}"
+      echo "  Skipping ${name} because it doesn't match ${STORAGE} storage provider"
       continue
     fi
   fi
@@ -253,7 +265,7 @@ do
   mkdir -p ${name}
   cd "${name}"
 
-  cp -R "${SCRIPT_DIR}/${name}/"* .
+  cp -R "${SCRIPT_DIR}/${name}" .
   if [[ -n "${PORTWORX_SPEC_FILE_BASENAME}" ]]; then
     ln -s "${WORKSPACE_DIR}/${PORTWORX_SPEC_FILE_BASENAME}" "./${PORTWORX_SPEC_FILE_BASENAME}"
   fi
