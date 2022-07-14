@@ -22,6 +22,7 @@ CLOUD_PROVIDER=""
 STORAGE=""
 PREFIX_NAME=""
 PORTWORX_SPEC_FILE=""
+APPEND=""
 
 if [[ "$1" == "-h" ]]; then
   Usage
@@ -29,11 +30,13 @@ if [[ "$1" == "-h" ]]; then
 fi
 
 # Get the options
-while getopts ":p:s:n:x:h:" option; do
+while getopts ":p:s:n:x:a:h:" option; do
    case $option in
       h) # display Help
          Usage
          exit 1;;
+      a)
+         APPEND="true";;
       p)
          CLOUD_PROVIDER=$OPTARG;;
       s) # Enter a name
@@ -50,11 +53,6 @@ while getopts ":p:s:n:x:h:" option; do
 done
 
 ARG_ARRAY=( "$@" )
-
-APPEND="false"
-if [[ " ${ARG_ARRAY[*]} " =~ " --append " ]]; then
-  APPEND="true"
-fi
 
 
 RED='\033[0;31m'
@@ -222,13 +220,12 @@ else
   ALL_ARCH="200|210|400"
 fi
 
-find ${SCRIPT_DIR}/. -type d -maxdepth 1 | grep -vE "[.][.]/[.].*" | grep -v workspace | sort | \
+find ${SCRIPT_DIR}/. -maxdepth 1 -type d | grep -vE "[.][.]/[.].*" | grep -v workspace | sort | \
   while read dir;
 do
-
   name=$(echo "$dir" | sed -E "s/.*\///")
 
-  if [[ ! -d "${SCRIPT_DIR}/${name}/terraform" ]]; then
+  if [[ ! -d "${SCRIPT_DIR}/${name}/main.tf" ]]; then
     continue
   fi
 
@@ -256,7 +253,7 @@ do
   mkdir -p ${name}
   cd "${name}"
 
-  cp -R "${SCRIPT_DIR}/${name}/terraform/"* .
+  cp -R "${SCRIPT_DIR}/${name}/"* .
   if [[ -n "${PORTWORX_SPEC_FILE_BASENAME}" ]]; then
     ln -s "${WORKSPACE_DIR}/${PORTWORX_SPEC_FILE_BASENAME}" "./${PORTWORX_SPEC_FILE_BASENAME}"
   fi
