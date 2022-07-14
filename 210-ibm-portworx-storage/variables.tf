@@ -56,6 +56,11 @@ variable "resource_group_sync" {
   description = "Value used to order the provisioning of the resource group"
   default = ""
 }
+variable "purge_volumes" {
+  type = bool
+  description = "Flag indicating that any volumes in the resource group should be automatically destroyed before destroying the resource group. If volumes exist and the flag is false then the destroy will fail."
+  default = false
+}
 variable "gitops_repo_host" {
   type = string
   description = "The host for the git repository. The git host used can be a GitHub, GitHub Enterprise, Gitlab, Bitbucket, Gitea or Azure DevOps server. If the host is null assumes in-cluster Gitea instance will be used."

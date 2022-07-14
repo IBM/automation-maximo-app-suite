@@ -25,7 +25,7 @@ spec:
           scope: global
     - name: gitops-cp-maximo
       alias: gitops-cp-maximo
-      version: v1.3.1
+      version: v1.3.2
       variables:
         - name: instanceid
           ref: mas8
@@ -76,7 +76,7 @@ spec:
           value: masbas
     - name: gitops-repo
       alias: gitops_repo
-      version: v1.19.5
+      version: v1.20.2
     - name: util-storage-class-manager
       alias: util-storage-class-manager
       version: v1.0.2

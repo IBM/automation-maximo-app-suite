@@ -9,7 +9,6 @@ locals {
   filtered_names_105 = [for dir in local.names_105 : "${get_parent_terragrunt_dir()}/${dir}" if fileexists("${get_parent_terragrunt_dir()}/${dir}/terragrunt.hcl")]
   cluster_config_path = length(local.filtered_names_105) > 0 ? local.filtered_names_105[0] : "${get_parent_terragrunt_dir()}/.mocks/${local.mock_105}"
   mock_105 = local.dependencies.mock_105
-  cluster_skip_outputs = length(local.filtered_names_105) > 0 ? false : true
 }
 
 terraform {
@@ -21,9 +20,9 @@ terraform {
 
 dependency "cluster" {
   config_path = local.cluster_config_path
-  skip_outputs = local.cluster_skip_outputs
+  skip_outputs = false
 
-  mock_outputs_allowed_terraform_commands = ["validate", "init", "plan"]
+  mock_outputs_allowed_terraform_commands = ["validate", "init", "plan", "destroy", "output"]
   mock_outputs = {
     cluster_server_url = ""
     cluster_username = ""

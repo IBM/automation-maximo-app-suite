@@ -28,7 +28,7 @@ module "bas-namespace" {
   server_name = module.gitops_repo.server_name
 }
 module "gitops_repo" {
-  source = "github.com/cloud-native-toolkit/terraform-tools-gitops?ref=v1.19.5"
+  source = "github.com/cloud-native-toolkit/terraform-tools-gitops?ref=v1.20.2"
 
   branch = var.gitops_repo_branch
   gitea_host = var.gitops_repo_gitea_host
@@ -59,7 +59,7 @@ module "gitops-cp-catalogs" {
   server_name = module.gitops_repo.server_name
 }
 module "gitops-cp-maximo" {
-  source = "github.com/cloud-native-toolkit/terraform-gitops-cp-maximo?ref=v1.3.1"
+  source = "github.com/cloud-native-toolkit/terraform-gitops-cp-maximo?ref=v1.3.2"
 
   catalog_name = module.gitops-cp-catalogs.catalog_ibmoperators
   catalog_namespace = var.gitops-cp-maximo_catalog_namespace
