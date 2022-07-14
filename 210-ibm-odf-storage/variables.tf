@@ -105,3 +105,8 @@ variable "gitops_repo_strict" {
   description = "Flag indicating that an error should be thrown if the repo already exists"
   default = false
 }
+variable "debug" {
+  type = bool
+  description = "Flag indicating that debug loggging should be enabled"
+  default = false
+}

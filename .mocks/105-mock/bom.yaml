@@ -8,6 +8,7 @@ metadata:
   annotations:
     displayName: VPC OpenShift mock
     description: Mock layer for VPC OpenShift
+    path: .mocks
 spec:
   modules:
     - name: ocp-login

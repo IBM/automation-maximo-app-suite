@@ -9,12 +9,13 @@ Usage()
    echo
    echo "Usage: setup-workspace.sh"
    echo "  options:"
-   echo "  -p     Cloud provider (aws, azure, ibm)"
-   echo "  -s     Storage (portworx or odf or <RWX storage class>)"
-   echo "  -c     (optional) Cluster ingress - the subdomain for ingress urls into the cluster"
-   echo "  -n     (optional) Prefix that should be used for all variables"
-   echo "  -x     (optional) Portworx spec file - the name of the file containing the Portworx configuration spec yaml"
-   echo "  -h     Print this help"
+   echo "  -p        Cloud provider (aws, azure, ibm)"
+   echo "  -s        Storage (portworx or odf or <RWX storage class>)"
+   echo "  -c        (optional) Cluster ingress - the subdomain for ingress urls into the cluster"
+   echo "  -n        (optional) Prefix that should be used for all variables"
+   echo "  -x        (optional) Portworx spec file - the name of the file containing the Portworx configuration spec yaml"
+   echo "  --append  Adds the configuration to the existing workspace"
+   echo "  -h        Print this help"
    echo
 }
 
@@ -51,6 +52,14 @@ while getopts ":p:s:n:c:x:h:" option; do
          exit 1;;
    esac
 done
+
+ARG_ARRAY=( "$@" )
+
+APPEND="false"
+if [[ " ${ARG_ARRAY[*]} " =~ " --append " ]]; then
+  APPEND="true"
+fi
+
 
 RED='\033[0;31m'
 YELLOW='\033[0;33m'
@@ -197,7 +206,7 @@ if [[ -n "${PREFIX_NAME}" ]]; then
   PREFIX_NAME="${PREFIX_NAME}-"
 fi
 
-if [[ -d "${WORKSPACE_DIR}" ]]; then
+if [[ -d "${WORKSPACE_DIR}" ]] && [[ "${APPEND}" != "true" ]]; then
   DATE=$(date "+%Y%m%d%H%M")
   mv "${WORKSPACE_DIR}" "${WORKSPACES_DIR}/workspace-${DATE}"
 
@@ -223,16 +232,16 @@ cat "${SCRIPT_DIR}/terraform.tfvars.template" | \
   sed "s/RWX_STORAGE/${RWX_STORAGE}/g" | \
   sed "s/RWO_STORAGE/${RWO_STORAGE}/g" | \
   sed "s/PORTWORX_SPEC_FILE/${PORTWORX_SPEC_FILE_BASENAME}/g" \
-  > "${SCRIPT_DIR}/terraform.tfvars"
+  > "${SCRIPT_DIR}/maximo.tfvars"
 
-ln -s "${SCRIPT_DIR}/terraform.tfvars" ./terraform.tfvars
+ln -s "${SCRIPT_DIR}/maximo.tfvars" ./maximo.tfvars
 
 cp "${SCRIPT_DIR}/apply-all.sh" "${WORKSPACE_DIR}/apply-all.sh"
 cp "${SCRIPT_DIR}/destroy-all.sh" "${WORKSPACE_DIR}/destroy-all.sh"
 
 WORKSPACE_DIR=$(cd "${WORKSPACE_DIR}"; pwd -P)
 
-if [[ -z "${PORTWORX_SPEC_FILE}" ]] || [[ "${PORTWORX_SPEC_FILE}" == "installed" ]]; then
+if { [[ -z "${PORTWORX_SPEC_FILE}" ]] && [[ "${CLOUD_PROVIDER}" != "ibm" ]]; } || [[ "${PORTWORX_SPEC_FILE}" == "installed" ]]; then
   ALL_ARCH="200|400"
 else
   ALL_ARCH="200|210|400"
@@ -273,7 +282,6 @@ do
   cd "${name}"
 
   cp -R "${SCRIPT_DIR}/${name}/terraform/"* .
-  ln -s "${WORKSPACE_DIR}"/terraform.tfvars ./terraform.tfvars
   if [[ -n "${PORTWORX_SPEC_FILE_BASENAME}" ]]; then
     ln -s "${WORKSPACE_DIR}/${PORTWORX_SPEC_FILE_BASENAME}" "./${PORTWORX_SPEC_FILE_BASENAME}"
   fi
