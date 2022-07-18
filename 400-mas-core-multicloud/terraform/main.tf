@@ -42,7 +42,7 @@ module "cluster" {
   tls_secret_name = var.cluster_tls_secret_name
 }
 module "gitea" {
-  source = "github.com/cloud-native-toolkit/terraform-tools-gitea?ref=v0.4.0"
+  source = "github.com/cloud-native-toolkit/terraform-tools-gitea?ref=v0.4.1"
 
   cluster_config_file = module.cluster.config_file_path
   cluster_type = module.cluster.platform.type_code

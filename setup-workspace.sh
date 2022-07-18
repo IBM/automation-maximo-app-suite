@@ -272,6 +272,7 @@ do
   mkdir -p ${name}
   cd "${name}"
 
+  cp "${SCRIPT_DIR}/${name}/bom.yaml" .
   cp -R "${SCRIPT_DIR}/${name}/terraform/"* .
   ln -s "${WORKSPACE_DIR}"/terraform.tfvars ./terraform.tfvars
   if [[ -n "${PORTWORX_SPEC_FILE_BASENAME}" ]]; then
