@@ -11,6 +11,12 @@ metadata:
     deployment-type/gitops: 'true'
 spec:
   modules:
+    - name: gitea
+      alias: gitea
+      version: v0.4.0
+      dependencies:
+        - id: namespace
+          ref: gitea_namespace
     - name: gitops-cp-bas
       alias: bas
       version: v1.1.1
@@ -57,6 +63,12 @@ spec:
         - name: namespace
           ref: mongo-namespace
     - name: gitops-namespace
+      alias: gitea_namespace
+      version: v1.11.2
+      variables: &ref_0
+        - name: name
+          value: gitea
+    - name: gitops-namespace
       alias: sls-namespace
       version: v1.11.2
       variables:
@@ -76,7 +88,10 @@ spec:
           value: masbas
     - name: gitops-repo
       alias: gitops_repo
-      version: v1.20.2
+      version: v1.20.5
+    - name: ocp-login
+      alias: cluster
+      version: v1.4.2
     - name: util-storage-class-manager
       alias: util-storage-class-manager
       version: v1.0.2
@@ -89,8 +104,14 @@ spec:
           scope: global
         - name: block_storage_class
           scope: global
+    - name: olm
+      version: v1.3.2
+    - name: gitops-namespace
+      alias: gitea_namespace
+      version: v3.2.3
+      variables: *ref_0
     - name: util-clis
-      version: v1.16.2
+      version: v1.16.4
   variables:
     - name: entitlement_key
       type: string
@@ -135,6 +156,13 @@ spec:
       description: >-
         The short name of the repository (i.e. the part after the org/group
         name)
+    - name: server_url
+      type: string
+      description: The url for the OpenShift api
+    - name: cluster_login_token
+      type: string
+      description: Token used for authentication
+      sensitive: true
     - name: rwx_storage_class
       type: string
       description: The storage class to use for Read-Write-Many volumes

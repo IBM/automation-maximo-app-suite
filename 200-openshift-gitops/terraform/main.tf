@@ -16,7 +16,7 @@ module "argocd-bootstrap" {
   sealed_secret_private_key = module.sealed-secret-cert.private_key
 }
 module "cluster" {
-  source = "github.com/cloud-native-toolkit/terraform-ocp-login?ref=v1.4.0"
+  source = "github.com/cloud-native-toolkit/terraform-ocp-login?ref=v1.4.2"
 
   ca_cert = var.cluster_ca_cert
   ca_cert_file = var.cluster_ca_cert_file
@@ -29,14 +29,34 @@ module "cluster" {
   skip = var.cluster_skip
   tls_secret_name = var.cluster_tls_secret_name
 }
+module "gitea" {
+  source = "github.com/cloud-native-toolkit/terraform-tools-gitea?ref=v0.4.0"
+
+  cluster_config_file = module.cluster.config_file_path
+  cluster_type = module.cluster.platform.type_code
+  instance_name = var.gitea_instance_name
+  instance_namespace = module.gitea_namespace.name
+  olm_namespace = module.olm.olm_namespace
+  operator_namespace = module.olm.target_namespace
+  password = var.gitea_password
+  username = var.gitea_username
+}
+module "gitea_namespace" {
+  source = "github.com/cloud-native-toolkit/terraform-k8s-namespace?ref=v3.2.3"
+
+  cluster_config_file_path = module.cluster.config_file_path
+  create_operator_group = var.gitea_namespace_create_operator_group
+  name = var.gitea_namespace_name
+}
 module "gitops_repo" {
-  source = "github.com/cloud-native-toolkit/terraform-tools-gitops?ref=v1.20.2"
+  source = "github.com/cloud-native-toolkit/terraform-tools-gitops?ref=v1.20.5"
 
   branch = var.gitops_repo_branch
-  gitea_host = var.gitops_repo_gitea_host
-  gitea_org = var.gitops_repo_gitea_org
-  gitea_token = var.gitops_repo_gitea_token
-  gitea_username = var.gitops_repo_gitea_username
+  debug = var.debug
+  gitea_host = module.gitea.host
+  gitea_org = module.gitea.org
+  gitea_token = module.gitea.token
+  gitea_username = module.gitea.username
   gitops_namespace = var.gitops_repo_gitops_namespace
   host = var.gitops_repo_host
   org = var.gitops_repo_org
