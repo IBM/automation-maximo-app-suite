@@ -48,20 +48,20 @@ jobs:
         run: |
           if [[ "${{ matrix.provider }}" == "ibm" ]]; then
             REPO="automation-ibmcloud-infra-openshift"
-            REPO_REF="refs/heads/output"
+            REPO_BRANCH="main"
           elif [[ "${{ matrix.provider }}" == "aws" ]]; then
             REPO="automation-aws-infra-openshift"
-            REPO_REF="refs/heads/main"
+            REPO_BRANCH="main"
           elif [[ "${{ matrix.provider }}" == "azure" ]]; then
             REPO="automation-azure-infra-openshift"
-            REPO_REF="refs/heads/main"
+            REPO_BRANCH="main"
           fi
           
           echo "Repo: ${REPO}"
           echo "::set-output name=infra-repo::$REPO"
           
-          echo "Repo ref: ${REPO_REF}"
-          echo "::set-output name=infra-repo-ref::$REPO_REF"
+          echo "Repo branch: ${REPO_BRANCH}"
+          echo "::set-output name=infra-repo-branch::REPO_BRANCH"
 
       - name: Checkout
         uses: actions/checkout@v3
@@ -72,7 +72,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: IBM/${{ steps.variables.outputs.infra-repo }}
-          ref: ${{ steps.variables.outputs.infra-repo-ref }}
+          ref: refs/heads/${{ steps.variables.outputs.infra-repo-branch }}
           path: infra
 
       - name: Terraform Apply - ${{ matrix.provider }}
