@@ -18,7 +18,7 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     container:
-      image: quay.io/cloudnativetoolkit/terraform:v1.1
+      image: quay.io/cloudnativetoolkit/cli-tools-ibmcloud:v1.2
       options: --privileged --user root
 
     strategy:
