@@ -61,7 +61,7 @@ jobs:
           echo "::set-output name=infra-repo::$REPO"
           
           echo "Repo branch: ${REPO_BRANCH}"
-          echo "::set-output name=infra-repo-branch::REPO_BRANCH"
+          echo "::set-output name=infra-repo-branch::$REPO_BRANCH"
 
       - name: Checkout
         uses: actions/checkout@v3
