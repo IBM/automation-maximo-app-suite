@@ -24,7 +24,7 @@ spec:
       default: true
     - name: gitops-repo
       alias: gitops_repo
-      version: v1.20.5
+      version: v1.21.0
   variables:
     - name: ibmcloud_api_key
       type: string

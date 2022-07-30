@@ -11,6 +11,7 @@ Usage()
    echo "  options:"
    echo "  -p      Cloud provider (aws, azure, ibm)"
    echo "  -s      Storage (portworx or odf or <RWX storage class>)"
+   echo "  -m      MAS instance id. Default is masdemo"
    echo "  -n      (optional) Prefix that should be used for all variables"
    echo "  -x      (optional) Portworx spec file - the name of the file containing the Portworx configuration spec yaml"
    echo "  -g      (optional) the git host that will be used for the gitops repo. If left blank gitea will be used by default. (Github, Github Enterprise, Gitlab, Bitbucket, Azure DevOps, and Gitea servers are supported)"
@@ -25,6 +26,7 @@ PREFIX_NAME=""
 PORTWORX_SPEC_FILE=""
 APPEND=""
 GIT_HOST=""
+MAS_ID="masdemo"
 
 if [[ "$1" == "-h" ]]; then
   Usage
@@ -32,7 +34,7 @@ if [[ "$1" == "-h" ]]; then
 fi
 
 # Get the options
-while getopts ":p:s:n:x:a:g:h:" option; do
+while getopts ":p:s:m:n:x:a:g:h:" option; do
    case $option in
       h) # display Help
          Usage
@@ -43,6 +45,8 @@ while getopts ":p:s:n:x:a:g:h:" option; do
          CLOUD_PROVIDER=$OPTARG;;
       s) # Enter a name
          STORAGE=$OPTARG;;
+      m) # Enter a name
+         MAS_ID=$OPTARG;;
       n) # Enter a name
          PREFIX_NAME=$OPTARG;;
       x) # Enter a name
@@ -217,6 +221,7 @@ cd "${WORKSPACE_DIR}"
 
 cat "${SCRIPT_DIR}/terraform.tfvars.template-maximo" | \
   sed "s/PREFIX/${PREFIX_NAME}/g" | \
+  sed "s/MAS_ID/${MAS_ID}/g" | \
   sed "s/RWX_STORAGE/${RWX_STORAGE}/g" | \
   sed "s/RWO_STORAGE/${RWO_STORAGE}/g" | \
   sed "s/PORTWORX_SPEC_FILE/${PORTWORX_SPEC_FILE_BASENAME}/g" \
@@ -236,6 +241,8 @@ cp "${SCRIPT_DIR}/plan-all.sh" "${WORKSPACE_DIR}"
 cp -R "${SCRIPT_DIR}/.mocks" "${WORKSPACE_DIR}"
 cp "${SCRIPT_DIR}/layers.yaml" "${WORKSPACE_DIR}"
 cp "${SCRIPT_DIR}/terragrunt.hcl" "${WORKSPACE_DIR}"
+
+mkdir -p "${WORKSPACE_DIR}/bin"
 
 WORKSPACE_DIR=$(cd "${WORKSPACE_DIR}"; pwd -P)
 
@@ -283,6 +290,8 @@ do
   if [[ -n "${PORTWORX_SPEC_FILE_BASENAME}" ]]; then
     ln -s "${WORKSPACE_DIR}/${PORTWORX_SPEC_FILE_BASENAME}" "./${PORTWORX_SPEC_FILE_BASENAME}"
   fi
+
+  ln -s ../bin bin2
 
   cd - > /dev/null
 done

@@ -17,10 +17,6 @@ variable "region" {
   type = string
   description = "AWS Region the cluster is deployed in"
 }
-variable "aws-portworx_portworx_config" {
-  type = string
-  description = "Portworx configuration"
-}
 variable "aws-portworx_disk_size" {
   type = string
   description = "Disk size for each Portworx volume"
@@ -40,6 +36,21 @@ variable "aws-portworx_px_enable_csi" {
   type = bool
   description = "Enable CSI on PX"
   default = true
+}
+variable "aws-portworx_portworx_spec" {
+  type = string
+  description = "the value of aws-portworx_portworx_spec"
+  default = ""
+}
+variable "aws-portworx_portworx_spec_file" {
+  type = string
+  description = "The path to the file that contains the yaml spec for the Portworx config. Either the `portworx_spec_file` or `portworx_spec` must be provided. The instructions for creating this configuration can be found at https://github.com/cloud-native-toolkit/terraform-azure-portworx/blob/main/PORTWORX_CONFIG.md"
+  default = ""
+}
+variable "aws-portworx_enable_encryption" {
+  type = bool
+  description = "Flag indicating portworx volumes should be encrypted"
+  default = false
 }
 variable "server_url" {
   type = string

@@ -13,6 +13,11 @@ variable "gitea_password" {
   description = "The password for the instance"
   default = ""
 }
+variable "gitea_ca_cert_file" {
+  type = string
+  description = "The path to the file that contains the ca certificate"
+  default = ""
+}
 variable "config_banner_background_color" {
   type = string
   description = "The background color of the top banner. This value can be a named color (e.g. purple, red) or an RGB value (#FF0000)."

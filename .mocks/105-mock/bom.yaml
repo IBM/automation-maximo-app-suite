@@ -13,7 +13,7 @@ spec:
   modules:
     - name: ocp-login
       alias: cluster
-      version: v1.4.2
+      version: v1.5.1
   variables:
     - name: server_url
       type: string

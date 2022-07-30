@@ -111,5 +111,5 @@ jobs:
       - name: Terraform Destroy - ${{ matrix.provider }}
         if: ${{ always() }}
         run: |
-          cd ../workspaces/current
+          cd ./workspaces/current
           ./destroy-all.sh -y

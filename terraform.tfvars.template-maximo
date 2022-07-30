@@ -20,7 +20,7 @@ file_storage_class="RWO_STORAGE"
 block_storage_class="RWO_STORAGE"
 
 ## gitops-cp-maximo_instanceid: instance name for MAS - for example: masdemo or mas8
-gitops-cp-maximo_instanceid="masdemo"
+gitops-cp-maximo_instanceid="MAS_ID"
 
 ## sls-namespace_name: The value that should be used for the namespace
 sls-namespace_name="ibm-sls"
