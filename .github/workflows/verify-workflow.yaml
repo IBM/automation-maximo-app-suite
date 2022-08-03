@@ -108,6 +108,15 @@ jobs:
           
           ./apply-all.sh -y
 
+      - name: Validate Deploy - ${{ matrix.provider }}
+        run: |
+          export INSTANCE_ID=$(cat ./workspaces/current/maximo.tfvars | grep gitops-cp-maximo_instanceid | sed -E 's/gitops-cp-maximo_instanceid="(.*)"/\1/g')
+          export KUBECONFIG=$(cd ./workspaces/current/105-ibm-vpc-openshift/.tmp/.kube; pwd -P)
+          export BIN_DIR=${cd ./workspaces/current/bin; pwd -P)
+          
+          ./main/.github/scripts/validate-deploy.sh
+          
+
       - name: Terraform Destroy - ${{ matrix.provider }}
         if: ${{ always() }}
         run: |
