@@ -30,7 +30,7 @@ jobs:
     env:
       HOME: /home/devops
       FLAVOR: quickstart
-      REGION: eu-de
+      REGION: ca-tor
       STORAGE: portworx
       IBMCLOUD_API_KEY: ${{ secrets.IBMCLOUD_API_KEY }}
       TF_VAR_ibmcloud_api_key: ${{ secrets.IBMCLOUD_API_KEY }}
