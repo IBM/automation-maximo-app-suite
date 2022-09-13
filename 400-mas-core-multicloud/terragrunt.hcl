@@ -10,15 +10,15 @@ locals {
   cluster_config_path = length(local.filtered_names_105) > 0 ? local.filtered_names_105[0] : "${get_parent_terragrunt_dir()}/.mocks/${local.mock_105}"
   mock_105 = local.dependencies["cluster"].mock
 
-  dep_200 = local.dependencies.name_200
-  mock_200 = local.dependencies.mock_200
+  dep_200 = local.dependencies["200"].names[0]
+  mock_200 = local.dependencies["200"].mock
   gitops_config_path = fileexists("${get_parent_terragrunt_dir()}/${local.dep_200}/terragrunt.hcl") ? "${get_parent_terragrunt_dir()}/${local.dep_200}" : "${get_parent_terragrunt_dir()}/.mocks/${local.mock_200}"
   gitops_skip_outputs = fileexists("${get_parent_terragrunt_dir()}/${local.dep_200}/terragrunt.hcl") ? false : true
 
-  names_210 = local.dependencies.names_210
+  names_210 = local.dependencies["210"].names
   filtered_names_210 = [for dir in local.names_210 : "${get_parent_terragrunt_dir()}/${dir}" if fileexists("${get_parent_terragrunt_dir()}/${dir}/terragrunt.hcl")]
   storage_config_path = length(local.filtered_names_210) > 0 ? local.filtered_names_210[0] : "${get_parent_terragrunt_dir()}/.mocks/${local.mock_210}"
-  mock_210 = local.dependencies.mock_210
+  mock_210 = local.dependencies["210"].mock
   storage_skip_outputs = length(local.filtered_names_210) > 0 ? false : true
 }
 
