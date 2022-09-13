@@ -21,7 +21,7 @@ module "gitops_repo" {
   username = var.gitops_repo_username
 }
 module "gitops-ibm-portworx" {
-  source = "github.com/cloud-native-toolkit/terraform-gitops-ibm-portworx?ref=v0.3.0"
+  source = "github.com/cloud-native-toolkit/terraform-gitops-ibm-portworx?ref=v0.4.0"
 
   capacity = var.gitops-ibm-portworx_capacity
   encryption_key = var.gitops-ibm-portworx_encryption_key
@@ -36,7 +36,7 @@ module "gitops-ibm-portworx" {
   server_name = module.gitops_repo.server_name
 }
 module "gitops-ibmcloud-operator" {
-  source = "github.com/cloud-native-toolkit/terraform-gitops-ibmcloud-operator?ref=v0.2.1"
+  source = "github.com/cloud-native-toolkit/terraform-gitops-ibmcloud-operator?ref=v0.2.2"
 
   git_credentials = module.gitops_repo.git_credentials
   gitops_config = module.gitops_repo.gitops_config
@@ -44,7 +44,7 @@ module "gitops-ibmcloud-operator" {
   server_name = module.gitops_repo.server_name
 }
 module "portworx_namespace" {
-  source = "github.com/cloud-native-toolkit/terraform-gitops-namespace?ref=v1.11.2"
+  source = "github.com/cloud-native-toolkit/terraform-gitops-namespace?ref=v1.12.2"
 
   argocd_namespace = var.portworx_namespace_argocd_namespace
   ci = var.portworx_namespace_ci
@@ -56,10 +56,17 @@ module "portworx_namespace" {
 }
 module "resource_group" {
   source = "cloud-native-toolkit/resource-group/ibm"
-  version = "3.3.2"
+  version = "3.3.4"
 
   ibmcloud_api_key = var.ibmcloud_api_key
   purge_volumes = var.purge_volumes
   resource_group_name = var.resource_group_name
   sync = var.resource_group_sync
+}
+module "util-clis" {
+  source = "cloud-native-toolkit/clis/util"
+  version = "1.16.9"
+
+  bin_dir = var.util-clis_bin_dir
+  clis = var.util-clis_clis == null ? null : jsondecode(var.util-clis_clis)
 }

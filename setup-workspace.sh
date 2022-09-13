@@ -266,6 +266,11 @@ do
     continue
   fi
 
+  # TODO ideally this should match an attribute in the BOM instead of hard coding the name
+  if [[ "${name}" == "105-existing-openshift" ]] && [[ $(find "${WORKSPACE_DIR}" -maxdepth 1 -name "105-*" | wc -l) -gt 0 ]]; then
+    continue
+  fi
+
   if [[ -n "${STORAGE}" ]] && [[ -n "${CLOUD_PROVIDER}" ]]; then
     BOM_STORAGE=$(grep -E "^ +storage" "${SCRIPT_DIR}/${name}/bom.yaml" | sed -E "s~[^:]+: [\"']?(.*)[\"']?~\1~g")
     BOM_PROVIDER=$(grep -E "^ +platform" "${SCRIPT_DIR}/${name}/bom.yaml" | sed -E "s~[^:]+: [\"']?(.*)[\"']?~\1~g")

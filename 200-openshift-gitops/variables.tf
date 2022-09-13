@@ -18,17 +18,17 @@ variable "gitea_ca_cert_file" {
   description = "The path to the file that contains the ca certificate"
   default = ""
 }
-variable "config_banner_background_color" {
+variable "gitops-cluster-config_banner_background_color" {
   type = string
   description = "The background color of the top banner. This value can be a named color (e.g. purple, red) or an RGB value (#FF0000)."
   default = "purple"
 }
-variable "config_banner_text_color" {
+variable "gitops-cluster-config_banner_text_color" {
   type = string
   description = "The text color for the top banner. This value can be a named color (e.g. purple, red) or an RGB value (#FF0000)."
   default = "white"
 }
-variable "config_banner_text" {
+variable "gitops-cluster-config_banner_text" {
   type = string
   description = "The text that will appear in the top banner in the cluster"
 }
@@ -208,6 +208,16 @@ variable "cluster_ca_cert_file" {
   type = string
   description = "The path to the file that contains the ca certificate"
   default = ""
+}
+variable "util-clis_bin_dir" {
+  type = string
+  description = "The directory where the clis should be downloaded. If not provided will default to ./bin"
+  default = ""
+}
+variable "util-clis_clis" {
+  type = string
+  description = "The list of clis that should be made available in the bin directory. Supported values are yq, jq, igc, helm, argocd, rosa, gh, glab, and kubeseal. (If not provided the list will default to yq, jq, and igc)"
+  default = "[\"yq\",\"jq\",\"igc\"]"
 }
 variable "sealed-secret-cert_cert" {
   type = string

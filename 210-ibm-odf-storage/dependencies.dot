@@ -6,4 +6,5 @@ digraph {
 "gitops_repo (gitops-repo)"
 "odf_namespace (gitops-namespace)" -> "gitops_repo (gitops-repo)"
 "odf_namespace (gitops-namespace)"
+"util-clis (util-clis)"
   }

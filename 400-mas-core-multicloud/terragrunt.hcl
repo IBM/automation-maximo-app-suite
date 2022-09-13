@@ -5,10 +5,10 @@ include "root" {
 locals {
   dependencies = yamldecode(file("${get_parent_terragrunt_dir()}/layers.yaml"))
 
-  names_105 = local.dependencies.names_105
+  names_105 = local.dependencies["cluster"].names
   filtered_names_105 = [for dir in local.names_105 : "${get_parent_terragrunt_dir()}/${dir}" if fileexists("${get_parent_terragrunt_dir()}/${dir}/terragrunt.hcl")]
   cluster_config_path = length(local.filtered_names_105) > 0 ? local.filtered_names_105[0] : "${get_parent_terragrunt_dir()}/.mocks/${local.mock_105}"
-  mock_105 = local.dependencies.mock_105
+  mock_105 = local.dependencies["cluster"].mock
 
   dep_200 = local.dependencies.name_200
   mock_200 = local.dependencies.mock_200

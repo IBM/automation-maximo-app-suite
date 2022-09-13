@@ -1,5 +1,5 @@
-## config_banner_text: The text that will appear in the top banner in the cluster
-#config_banner_text=""
+## gitops-cluster-config_banner_text: The text that will appear in the top banner in the cluster
+#gitops-cluster-config_banner_text=""
 
 ## gitops_repo_host: The host for the git repository. The git host used can be a GitHub, GitHub Enterprise, Gitlab, Bitbucket, Gitea or Azure DevOps server. If the host is null assumes in-cluster Gitea instance will be used.
 #gitops_repo_host=""

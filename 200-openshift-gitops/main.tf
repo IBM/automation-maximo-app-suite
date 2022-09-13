@@ -16,7 +16,7 @@ module "argocd-bootstrap" {
   sealed_secret_private_key = module.sealed-secret-cert.private_key
 }
 module "cluster" {
-  source = "github.com/cloud-native-toolkit/terraform-ocp-login?ref=v1.5.1"
+  source = "github.com/cloud-native-toolkit/terraform-ocp-login?ref=v1.6.0"
 
   ca_cert = var.cluster_ca_cert
   ca_cert_file = var.cluster_ca_cert_file
@@ -28,17 +28,6 @@ module "cluster" {
   server_url = var.server_url
   skip = var.cluster_skip
   tls_secret_name = var.cluster_tls_secret_name
-}
-module "config" {
-  source = "github.com/cloud-native-toolkit/terraform-gitops-cluster-config?ref=v1.0.0"
-
-  banner_background_color = var.config_banner_background_color
-  banner_text = var.config_banner_text
-  banner_text_color = var.config_banner_text_color
-  git_credentials = module.gitops_repo.git_credentials
-  gitops_config = module.gitops_repo.gitops_config
-  namespace = module.toolkit_namespace.name
-  server_name = module.gitops_repo.server_name
 }
 module "gitea" {
   source = "github.com/cloud-native-toolkit/terraform-tools-gitea?ref=v0.5.0"
@@ -83,8 +72,19 @@ module "gitops_repo" {
   type = var.gitops_repo_type
   username = var.gitops_repo_username
 }
+module "gitops-cluster-config" {
+  source = "github.com/cloud-native-toolkit/terraform-gitops-cluster-config?ref=v1.1.0"
+
+  banner_background_color = var.gitops-cluster-config_banner_background_color
+  banner_text = var.gitops-cluster-config_banner_text
+  banner_text_color = var.gitops-cluster-config_banner_text_color
+  git_credentials = module.gitops_repo.git_credentials
+  gitops_config = module.gitops_repo.gitops_config
+  namespace = module.toolkit_namespace.name
+  server_name = module.gitops_repo.server_name
+}
 module "gitops-console-link-job" {
-  source = "github.com/cloud-native-toolkit/terraform-gitops-console-link-job?ref=v1.4.6"
+  source = "github.com/cloud-native-toolkit/terraform-gitops-console-link-job?ref=v1.5.0"
 
   cluster_ingress_hostname = var.gitops-console-link-job_cluster_ingress_hostname
   cluster_type = var.gitops-console-link-job_cluster_type
@@ -110,7 +110,7 @@ module "sealed-secret-cert" {
   private_key_file = var.sealed-secret-cert_private_key_file
 }
 module "toolkit_namespace" {
-  source = "github.com/cloud-native-toolkit/terraform-gitops-namespace?ref=v1.11.2"
+  source = "github.com/cloud-native-toolkit/terraform-gitops-namespace?ref=v1.12.3"
 
   argocd_namespace = var.toolkit_namespace_argocd_namespace
   ci = var.toolkit_namespace_ci
@@ -119,4 +119,11 @@ module "toolkit_namespace" {
   gitops_config = module.gitops_repo.gitops_config
   name = var.toolkit_namespace_name
   server_name = module.gitops_repo.server_name
+}
+module "util-clis" {
+  source = "cloud-native-toolkit/clis/util"
+  version = "1.16.9"
+
+  bin_dir = var.util-clis_bin_dir
+  clis = var.util-clis_clis == null ? null : jsondecode(var.util-clis_clis)
 }

@@ -1,0 +1,13 @@
+
+
+## gitops-mas-manage_db_url: database connection url
+gitops-mas-manage_db_url="jdbc:db2://<yourdb2wh pod>-db2u-engn-svc.cp4d.svc:50001/BLUDB:sslConnection=true;"
+
+
+gitops-mas-manage_addons="[\"health\"]"
+
+## gitops-mas-manage_db_cert: database connection public cert
+## insert your cert here with \n at end of lines
+gitops-mas-manage_db_cert=""
+
+

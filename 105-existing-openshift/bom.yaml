@@ -1,19 +1,18 @@
 apiVersion: cloud.ibm.com/v1alpha1
 kind: BillOfMaterial
 metadata:
-  name: 105-mock
+  name: 105-existing-openshift
   labels:
     type: infrastructure
     code: '105'
   annotations:
-    displayName: VPC OpenShift mock
-    description: Mock layer for VPC OpenShift
-    path: .mocks
+    displayName: Existing OpenShift
+    description: Existing OpenShift cluster
 spec:
   modules:
     - name: ocp-login
       alias: cluster
-      version: v1.5.1
+      version: v1.6.0
   variables:
     - name: server_url
       type: string

@@ -19,20 +19,20 @@ spec:
         - id: namespace
           ref: gitea_namespace
     - name: gitops-cluster-config
-      alias: config
-      version: v1.0.0
+      alias: gitops-cluster-config
+      version: v1.1.0
     - name: gitops-console-link-job
       alias: gitops-console-link-job
-      version: v1.4.6
+      version: v1.5.0
     - name: gitops-namespace
       alias: gitea_namespace
-      version: v1.11.2
+      version: v1.12.3
       variables: &ref_0
         - name: name
           value: gitea
     - name: gitops-namespace
       alias: toolkit_namespace
-      version: v1.11.2
+      version: v1.12.3
       default: true
       variables:
         - name: name
@@ -46,19 +46,23 @@ spec:
       variables:
         - name: create_webhook
           value: true
+        - name: prefix
+          value: maximo
     - name: ocp-login
       alias: cluster
-      version: v1.5.1
+      version: v1.6.0
     - name: olm
       version: v1.3.2
     - name: gitops-namespace
       alias: gitea_namespace
       version: v3.2.3
       variables: *ref_0
+    - name: util-clis
+      version: v1.16.9
     - name: sealed-secret-cert
       version: v1.0.1
   variables:
-    - name: config_banner_text
+    - name: gitops-cluster-config_banner_text
       type: string
       description: The text that will appear in the top banner in the cluster
     - name: gitops_repo_host

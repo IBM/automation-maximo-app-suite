@@ -10,4 +10,5 @@ digraph {
 "resource_group (ibm-resource-group)"
 "portworx_namespace (gitops-namespace)" -> "gitops_repo (gitops-repo)"
 "portworx_namespace (gitops-namespace)"
+"util-clis (util-clis)"
   }
