@@ -1,8 +1,10 @@
 # Maximo Application Suite - Core Automation for AWS, Azure, and IBM Cloud
 
-## Overview
+Created with the ***TechZone Accelerator Toolkit***
 
-> This collection of Maximo Core IBM Cloud terraform automation layers has been crafted from a set of  [Terraform modules](https://modules.cloudnativetoolkit.dev/) created by the IBM GSI Ecosystem Lab team part of the [IBM Partner Ecosystem organization](https://www.ibm.com/partnerworld/public?mhsrc=ibmsearch_a&mhq=partnerworld). Please contact **Matthew Perrins** _mjperrin@us.ibm.com_, **Sean Sundberg** _seansund@us.ibm.com_, **Tom Skill** _tskill@us.ibm.com_,  or **Andrew Trice** _amtrice@us.ibm.com_ for more details or raise an issue on the repository.
+> This collection of terraform automation bundles has been crafted from a set of [Terraform modules](https://modules.cloudnativetoolkit.dev/) created by Ecosystem Engineering
+
+## Overview
 
 The automation will support the installation of Maximo Core on three cloud platforms (AWS, Azure, and IBM Cloud).
 
