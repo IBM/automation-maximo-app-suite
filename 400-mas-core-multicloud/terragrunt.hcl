@@ -68,6 +68,10 @@ terraform {
 }
 
 inputs = {
+  server_url = dependency.cluster.outputs.cluster_server_url
+  cluster_login_username = dependency.cluster.outputs.cluster_username
+  cluster_login_password = dependency.cluster.outputs.cluster_password
+  cluster_login_token = dependency.cluster.outputs.cluster_token
   cluster_ingress = dependency.cluster.outputs.cluster_ingress
   gitops_repo_host = dependency.gitops.outputs.gitops_host
   gitops_repo_org = dependency.gitops.outputs.gitops_org
