@@ -1,0 +1,48 @@
+########################################################
+# Name: Maximo Application Suite Terraform Variable File
+# Desc: Initial input variables to support installation of Maximo Application Suite and its Applications and Industry solutions into the Cloud of your choice
+########################################################
+
+## rwx_storage_class: The storage class to use for Read-Write-Many volumes
+## portworx or odf storage class (e.g. portworx: portworx-rwx-gp3-sc or odf: ocs-storagecluster-cephfs)
+rwx_storage_class="RWX_STORAGE"
+
+## rwo_storage_class: The storage class to use for Read-Write-One volumes
+## <your block storage on aws: gp2, on azure: managed-premium, on ibm: ibmc-vpc-block-10iops-tier>
+rwo_storage_class="RWO_STORAGE"
+
+## file_storage_class: The storage class to use for File storage volumes
+## <your block storage on aws: gp2, on azure: managed-premium, on ibm: ibmc-vpc-block-10iops-tier>
+file_storage_class="RWO_STORAGE"
+
+## block_storage_class: The storage class to use for Block storage volumes
+## <your block storage on aws: gp2, on azure: managed-premium, on ibm: ibmc-vpc-block-10iops-tier>
+block_storage_class="RWO_STORAGE"
+
+## gitops-cp-maximo_instanceid: instance name for MAS - for example: masdemo or mas8
+gitops-cp-maximo_instanceid="MAS_ID"
+
+## sls-namespace_name: The value that should be used for the namespace
+sls-namespace_name="ibm-sls"
+
+## mongo-namespace_name: The value that should be used for the namespace
+mongo-namespace_name="mas-mongo"
+
+## bas-namespace_name: The value that should be used for the namespace
+bas-namespace_name="mas-bas"
+
+## gitops-cluster-config_banner_text: The text that will appear in the top banner in the cluster
+gitops-cluster-config_banner_text="Maximo Application Suite"
+
+## resource_group_name: The name of the resource group
+resource_group_name="PREFIXstorage"
+
+## cluster_ingress: The subdomain for ingresses in the cluster
+## The value can be retrieved from the cluster using 'oc get ingresses.config/cluster -o jsonpath={.spec.domain}''
+#cluster_ingress="CLUSTER_INGRESS"
+
+## odf_namespace_name: The namespace where the job that provisions odf will run
+odf_namespace_name="odf"
+
+## portworx_spec_file: The name of the file containing the Portworx configuration spec yaml
+portworx_spec_file="PORTWORX_SPEC_FILE"

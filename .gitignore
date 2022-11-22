@@ -14,3 +14,4 @@ workspace/*
 workspace-*/*
 credentials.properties
 .idea/
+credentials.sh

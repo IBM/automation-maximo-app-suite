@@ -1,0 +1,14 @@
+##IoT##
+
+## gitops-terraform-gitops-mas-jdbc_db_cert: database connection public cert
+## cert w/new lines \n character
+gitops-terraform-gitops-mas-jdbc_db_cert=""
+
+## gitops-terraform-gitops-mas-jdbc_db_url: database connection url
+gitops-terraform-gitops-mas-jdbc_db_url="jdbc:db2://<db2wh pod location>-db2u-engn-svc.cp4d.svc:50001/BLUDB:sslConnection=true;"
+
+## block storage to use for deployment
+gitops-kafka-strimzi_storageclass="managed-premium"
+
+
+

@@ -8,12 +8,11 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-#  verify:
-#    uses: ./.github/workflows/verify-workflow.yaml
-#    secrets:
-#      IBMCLOUD_API_KEY: ${{ secrets.IBMCLOUD_API_KEY }}
-#      GITOPS_USERNAME: ${{ secrets.GITOPS_USERNAME }}
-#      GITOPS_TOKEN: ${{ secrets.GITOPS_TOKEN }}
+  verify:
+    uses: ./.github/workflows/verify-workflow.yaml
+    secrets:
+      IBMCLOUD_API_KEY: ${{ secrets.IBMCLOUD_API_KEY }}
+      ENTITLEMENT_KEY: ${{ secrets.ENTITLEMENT_KEY }}
 
   release:
     needs: [verify]
