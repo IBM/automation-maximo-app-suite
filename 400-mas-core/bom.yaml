@@ -1,0 +1,156 @@
+apiVersion: cloud.ibm.com/v1alpha1
+kind: BillOfMaterial
+metadata:
+  name: 400-mas-core
+  labels:
+    type: software
+    code: '400'
+  annotations:
+    displayName: Maximo Application Suite Core
+    description: GitOps deployment of Maximo Application Suite Core for OpenShift
+    deployment-type/gitops: 'true'
+    dependencies.cloudnativetoolkit.dev/needs: gitops,cluster,storage
+    dependencies.cloudnativetoolkit.dev/needs_gitops: gitops_repo
+    dependencies.cloudnativetoolkit.dev/needs_cluster: cluster
+    dependencies.cloudnativetoolkit.dev/needs_storage: util-storage-class-manager
+spec:
+  version: v2.0.0
+  modules:
+    - name: gitea
+      alias: gitea
+      version: v0.5.1
+      dependencies:
+        - id: namespace
+          ref: gitea_namespace
+    - name: gitops-mas-core
+      alias: gitops-mas-core
+      version: v1.2.0
+      variables:
+        - name: license_key
+          important: true
+        - name: license_key_file
+          important: true
+        - name: entitlement_key
+          scope: global
+    - name: gitops-namespace
+      alias: gitea_namespace
+      version: v1.15.0
+      variables: &ref_0
+        - name: name
+          value: gitea
+    - name: gitops-repo
+      alias: gitops_repo
+      version: v1.23.3
+    - name: ocp-login
+      alias: cluster
+      version: v1.6.2
+    - name: util-mas-core-ready
+      alias: util-mas-core-ready
+      version: v1.1.1
+    - name: util-storage-class-manager
+      alias: util-storage-class-manager
+      version: v1.0.3
+      variables:
+        - name: rwx_storage_class
+          scope: global
+        - name: rwo_storage_class
+          scope: global
+        - name: file_storage_class
+          scope: global
+        - name: block_storage_class
+          scope: global
+    - name: olm
+      version: v1.3.5
+    - name: gitops-namespace
+      alias: gitea_namespace
+      version: v3.2.4
+      variables: *ref_0
+    - name: gitops-toolkit-catalog
+      version: v1.0.0
+    - name: util-clis
+      version: v1.19.0
+  variables:
+    - name: entitlement_key
+      type: string
+      description: >-
+        The entitlement key used to access the Maximo Application Suite images
+        in the container registry. Visit
+        https://myibm.ibm.com/products-services/containerlibrary to get the key
+      sensitive: true
+    - name: gitops-mas-core_uds_contact_email
+      type: string
+      description: The email address of the contact person for UDS
+    - name: gitops-mas-core_uds_contact_first_name
+      type: string
+      description: The first name of the contact person for UDS
+    - name: gitops-mas-core_uds_contact_last_name
+      type: string
+      description: The last name of the contact person for UDS
+    - name: gitops-mas-core_license_key
+      type: string
+      description: >-
+        The contents of the license key that should be applied to the new
+        instance. The value can be provided directly or via the
+        'license_key_file' variable. If none is provided the license will need
+        to be applied manually after install.
+      value: ''
+    - name: gitops-mas-core_license_key_file
+      type: string
+      description: >-
+        The name of the file containing the license key that should be applied
+        to the new instance. The value can be provided in a file or directly via
+        the 'license_key' variable. If none is provided the license will need to
+        be applied manually after install.
+      value: ''
+    - name: gitops_repo_host
+      type: string
+      description: >-
+        The host for the git repository. The git host used can be a GitHub,
+        GitHub Enterprise, Gitlab, Bitbucket, Gitea or Azure DevOps server. If
+        the host is null assumes in-cluster Gitea instance will be used.
+      value: ''
+    - name: gitops_repo_org
+      type: string
+      description: >-
+        The org/group where the git repository exists/will be provisioned. If
+        the value is left blank then the username org will be used.
+      value: ''
+    - name: gitops_repo_project
+      type: string
+      description: >-
+        The project that will be used for the git repo. (Primarily used for
+        Azure DevOps repos)
+      value: ''
+    - name: gitops_repo_username
+      type: string
+      description: The username of the user with access to the repository
+      value: ''
+    - name: gitops_repo_token
+      type: string
+      description: The personal access token used to access the repository
+      value: ''
+      sensitive: true
+    - name: gitops_repo_repo
+      type: string
+      description: >-
+        The short name of the repository (i.e. the part after the org/group
+        name)
+    - name: server_url
+      type: string
+      description: The url for the OpenShift api
+    - name: cluster_login_token
+      type: string
+      description: Token used for authentication
+      sensitive: true
+    - name: rwx_storage_class
+      type: string
+      description: The storage class to use for Read-Write-Many volumes
+    - name: rwo_storage_class
+      type: string
+      description: The storage class to use for Read-Write-One volumes
+    - name: file_storage_class
+      type: string
+      description: The storage class to use for File storage volumes
+    - name: block_storage_class
+      type: string
+      description: The storage class to use for Block storage volumes

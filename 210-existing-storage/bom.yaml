@@ -1,0 +1,33 @@
+apiVersion: cloud.ibm.com/v1alpha1
+kind: BillOfMaterial
+metadata:
+  name: 210-existing-storage
+  labels:
+    type: storage
+    code: '210'
+  annotations:
+    displayName: Existing Storage
+    description: >-
+      Existing cluster storage either through native storage options or a
+      previously installed ODF or Portworx instance
+    dependencies.cloudnativetoolkit.dev/provides: storage
+    dependencies.cloudnativetoolkit.dev/provides_storage: storage
+spec:
+  version: v1.0.0
+  modules:
+    - name: util-storage-class-manager
+      alias: storage
+      version: v1.0.3
+  variables:
+    - name: storage_rwx_storage_class
+      type: string
+      description: The storage class to use for Read-Write-Many volumes
+    - name: storage_rwo_storage_class
+      type: string
+      description: The storage class to use for Read-Write-One volumes
+    - name: storage_file_storage_class
+      type: string
+      description: The storage class to use for File storage volumes
+    - name: storage_block_storage_class
+      type: string
+      description: The storage class to use for Block storage volumes

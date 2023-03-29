@@ -1,0 +1,13 @@
+variables:
+  - name: storage_rwx_storage_class
+    type: string
+    description: The storage class to use for Read-Write-Many volumes
+  - name: storage_rwo_storage_class
+    type: string
+    description: The storage class to use for Read-Write-One volumes
+  - name: storage_file_storage_class
+    type: string
+    description: The storage class to use for File storage volumes
+  - name: storage_block_storage_class
+    type: string
+    description: The storage class to use for Block storage volumes

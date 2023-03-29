@@ -10,11 +10,15 @@ metadata:
   annotations:
     displayName: Azure - Portworx Cluster Storage
     description: Installs Portworx into an OCP cluster on Azure
+    dependencies.cloudnativetoolkit.dev/provides: storage
+    dependencies.cloudnativetoolkit.dev/needs: cluster
+    dependencies.cloudnativetoolkit.dev/provides_storage: azure-portworx
+    dependencies.cloudnativetoolkit.dev/needs_cluster: cluster
 spec:
   modules:
     - name: azure-portworx
       alias: azure-portworx
-      version: v1.0.2
+      version: v1.1.0
       variables:
         - name: region
           scope: global
@@ -35,7 +39,7 @@ spec:
           scope: global
     - name: ocp-login
       alias: cluster
-      version: v1.4.2
+      version: v1.6.2
   variables:
     - name: azure_subscription_id
       type: string
@@ -61,7 +65,7 @@ spec:
         provided. The instructions for creating this configuration can be found
         at
         https://github.com/cloud-native-toolkit/terraform-azure-portworx/blob/main/PORTWORX_CONFIG.md
-      defaultValue: ''
+      value: ''
     - name: portworx_spec
       type: string
       description: >-
@@ -69,11 +73,11 @@ spec:
         or `portworx_spec` must be provided. The instructions for creating this
         configuration can be found at
         https://github.com/cloud-native-toolkit/terraform-azure-portworx/blob/main/PORTWORX_CONFIG.md
-      defaultValue: ''
+      value: ''
     - name: azure-portworx_enable_encryption
       type: bool
       description: Flag indicating portworx volumes should be encrypted
-      defaultValue: false
+      value: false
     - name: server_url
       type: string
       description: The url for the OpenShift api

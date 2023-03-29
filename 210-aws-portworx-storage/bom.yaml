@@ -10,28 +10,50 @@ metadata:
   annotations:
     displayName: AWS - Portworx Cluster Storage
     description: Installs Portworx in and OCP cluster on AWS
+    dependencies.cloudnativetoolkit.dev/provides: storage
+    dependencies.cloudnativetoolkit.dev/needs: cluster
+    dependencies.cloudnativetoolkit.dev/provides_storage: aws-portworx
+    dependencies.cloudnativetoolkit.dev/needs_cluster: cluster
 spec:
   modules:
     - name: aws-portworx
       alias: aws-portworx
-      version: v0.0.5
+      version: v0.2.0
+      variables:
+        - name: region
+          scope: global
+        - name: access_key
+          scope: global
+        - name: secret_key
+          scope: global
+        - name: portworx_spec_file
+          scope: global
+        - name: portworx_spec
+          scope: global
+          important: true
     - name: ocp-login
       alias: cluster
-      version: v1.4.2
+      version: v1.6.2
   variables:
     - name: region
       type: string
       description: AWS Region the cluster is deployed in
-    - name: aws-portworx_portworx_config
-      type: |-
-        object({
-            type=string,
-            cluster_id=string,
-            enable_encryption=bool,
-            user_id=string,
-            osb_endpoint=string
-          })
-      description: Portworx configuration
+    - name: portworx_spec
+      type: string
+      value: ''
+    - name: portworx_spec_file
+      type: string
+      description: >-
+        The path to the file that contains the yaml spec for the Portworx
+        config. Either the `portworx_spec_file` or `portworx_spec` must be
+        provided. The instructions for creating this configuration can be found
+        at
+        https://github.com/cloud-native-toolkit/terraform-azure-portworx/blob/main/PORTWORX_CONFIG.md
+      value: ''
+    - name: aws-portworx_enable_encryption
+      type: bool
+      description: Flag indicating portworx volumes should be encrypted
+      value: false
     - name: server_url
       type: string
       description: The url for the OpenShift api
