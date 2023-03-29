@@ -1,0 +1,11 @@
+digraph {
+    rankdir="BT"
+    "gitops-mas-manage (gitops-mas-manage)" -> "gitops_repo (gitops-repo)"
+"gitops-mas-manage (gitops-mas-manage)" -> "mas_core_existing (util-mas-core-existing)"
+"gitops-mas-manage (gitops-mas-manage)" -> "util-storage-class-manager (util-storage-class-manager)"
+"gitops-mas-manage (gitops-mas-manage)"
+"gitops_repo (gitops-repo)"
+"mas_core_existing (util-mas-core-existing)"
+"util-storage-class-manager (util-storage-class-manager)"
+"util-clis (util-clis)"
+  }

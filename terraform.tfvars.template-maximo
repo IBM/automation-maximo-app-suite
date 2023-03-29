@@ -1,0 +1,54 @@
+########################################################
+# Name: Maximo Application Suite Terraform Variable File
+# Desc: Initial input variables to support installation of Maximo Application Suite and its Applications and Industry solutions into the Cloud of your choice
+########################################################
+
+## rwx_storage_class: The storage class to use for Read-Write-Many volumes
+## portworx or odf storage class (e.g. portworx: portworx-rwx-gp3-sc or odf: ocs-storagecluster-cephfs)
+storage_rwx_storage_class="RWX_STORAGE"
+
+## rwo_storage_class: The storage class to use for Read-Write-One volumes
+## <your block storage on aws: gp2, on azure: managed-premium, on ibm: ibmc-vpc-block-10iops-tier>
+storage_rwo_storage_class="RWO_STORAGE"
+
+## file_storage_class: The storage class to use for File storage volumes
+## <your block storage on aws: gp2, on azure: managed-premium, on ibm: ibmc-vpc-block-10iops-tier>
+storage_file_storage_class="RWO_STORAGE"
+
+## block_storage_class: The storage class to use for Block storage volumes
+## <your block storage on aws: gp2, on azure: managed-premium, on ibm: ibmc-vpc-block-10iops-tier>
+storage_block_storage_class="RWO_STORAGE"
+
+## gitops-mas-core_mas_instance_id: instance name for MAS - for example: masdemo or mas8
+gitops-mas-core_mas_instance_id="MAS_ID"
+
+## gitops-cluster-config_banner_text: The text that will appear in the top banner in the cluster
+config_banner_text="Maximo Application Suite"
+
+## resource_group_name: The name of the resource group
+resource_group_name="PREFIXstorage"
+
+## cluster_ingress: The subdomain for ingresses in the cluster
+## The value can be retrieved from the cluster using 'oc get ingresses.config/cluster -o jsonpath={.spec.domain}''
+#cluster_ingress="CLUSTER_INGRESS"
+
+## odf_namespace_name: The namespace where the job that provisions odf will run
+odf_namespace_name="odf"
+
+## portworx_spec_file: The name of the file containing the Portworx configuration spec yaml
+portworx_spec_file="PORTWORX_SPEC_FILE"
+
+## gitops-mas-core_uds_contact_email: The email address of the contact person for UDS
+gitops-mas-core_uds_contact_email="UDS_EMAIL"
+
+## gitops-mas-core_uds_contact_first_name: The first name of the contact person for UDS
+gitops-mas-core_uds_contact_first_name="UDS_FIRST_NAME"
+
+## gitops-mas-core_uds_contact_last_name: The last name of the contact person for UDS
+gitops-mas-core_uds_contact_last_name="UDS_LAST_NAME"
+
+## gitops-mas-core_host_id: The host id for the MAS core instance that is included in the license. If none is provided the host id will be generated.
+gitops-mas-core_host_id="MAS_HOST_ID"
+
+## gitops-mas-core_license_key_file: The name of the file containing the license key that should be applied to the new instance. The value can be provided in a file or directly via the 'license_key' variable. If none is provided the license will need to be applied manually after install.
+gitops-mas-core_license_key_file="MAS_LICENSE_FILE"

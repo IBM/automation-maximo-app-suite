@@ -1,0 +1,26 @@
+variables:
+  - name: region
+    type: string
+    description: AWS Region the cluster is deployed in
+  - name: portworx_spec
+    type: string
+    value: ''
+  - name: portworx_spec_file
+    type: string
+    description: >-
+      The path to the file that contains the yaml spec for the Portworx config.
+      Either the `portworx_spec_file` or `portworx_spec` must be provided. The
+      instructions for creating this configuration can be found at
+      https://github.com/cloud-native-toolkit/terraform-azure-portworx/blob/main/PORTWORX_CONFIG.md
+    value: ''
+  - name: aws-portworx_enable_encryption
+    type: bool
+    description: Flag indicating portworx volumes should be encrypted
+    value: false
+  - name: server_url
+    type: string
+    description: The url for the OpenShift api
+  - name: cluster_login_token
+    type: string
+    description: Token used for authentication
+    sensitive: true

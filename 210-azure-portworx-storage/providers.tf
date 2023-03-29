@@ -1,0 +1,13 @@
+
+provider "azure" {
+
+
+
+
+}
+provider "clis" {
+
+
+
+
+}

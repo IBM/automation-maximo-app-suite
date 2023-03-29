@@ -1,0 +1,4 @@
+digraph {
+    rankdir="BT"
+    "storage (util-storage-class-manager)"
+  }
